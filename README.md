@@ -22,7 +22,7 @@ I'm a B2B demand generation and growth marketer. These are here because I'd rath
 
 **Why it matters for marketing:** Page value and visitor type carry most of the signal. A model like this is the basis for deciding which sessions deserve retargeting spend and which should be left alone — the same scoring logic I use on B2B accounts, applied to sessions.
 
-> **Attribution:** team project. Collaborators: Lauren Hutchinson, Ravindran Hohanavelu, Eric Weldon.
+> **Attribution:** team project
 
 ---
 
