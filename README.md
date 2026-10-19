@@ -1,5 +1,3 @@
-# portfolio
-My Github portfolio
 # Marketing Analytics Notebooks
 
 Python notebooks from my MBA coursework in Marketing and Data Science at Santa Clara University. Both start from a marketing question, not a modeling exercise — the analysis exists to support a spending or targeting decision, and each one ends with the recommendation I'd actually make.
