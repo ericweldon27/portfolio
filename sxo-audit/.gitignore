@@ -1,0 +1,20 @@
+# Credentials — never commit
+.env
+
+# Run output: crawled pages, cached SERP results, judgments, dashboards, history
+output/
+
+# Your own configuration and research (may contain competitive or customer information)
+config.json
+brief.json
+drafts/
+research/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# OS
+.DS_Store
