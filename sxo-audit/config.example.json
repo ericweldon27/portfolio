@@ -1,0 +1,50 @@
+{
+  "_comment": "Example configuration for a fictional company. Copy to config.json and replace with your own. config.json is gitignored.",
+  "our_site": {
+    "name": "Example Co",
+    "url": "https://www.example.com/"
+  },
+  "competitors": [
+    { "name": "Competitor A", "url": "https://www.competitor-a.example/" },
+    { "name": "Competitor B", "url": "https://www.competitor-b.example/" }
+  ],
+  "max_pages": 40,
+  "request_delay_seconds": 1.0,
+  "run_pagespeed": true,
+  "serp_budget": 60,
+  "distinctive_per_site": 15,
+  "keywords": [
+    "inventory forecasting software",
+    "reduce stockouts",
+    "store level demand forecasting",
+    "safety stock calculation",
+    "automated reorder point",
+    "inventory carrying costs",
+    "how to reduce stockouts in retail",
+    "inventory management for multiple warehouses",
+    "warehouse management system"
+  ],
+  "differentiators": [
+    "inventory forecasting software for multi-location retailers",
+    "forecast demand per store and per item",
+    "reduce stockouts without adding safety stock",
+    "lower inventory carrying costs",
+    "automated reorder suggestions"
+  ],
+  "topic_terms": [
+    "inventory", "forecasting", "demand", "stockout", "replenishment", "retail", "supply chain"
+  ],
+  "exclude_terms": [
+    "for sale", "rental", "jobs", "salary", "near me", "diy", "template", "pdf", "github", "course"
+  ],
+  "product_terms": [
+    "inventory", "forecast", "stockout", "reorder", "safety stock", "carrying cost"
+  ],
+  "questions": [
+    "How do I reduce stockouts without carrying more inventory?",
+    "What is a good safety stock calculation?",
+    "How does store level demand forecasting work?",
+    "What does inventory forecasting software actually do?",
+    "How do I set an automated reorder point?"
+  ]
+}

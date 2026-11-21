@@ -1,0 +1,1723 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Social Audit Console (B2B)</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: horizontal module tab-strip at top (scrolls on phone), single scrolling content column below */
+:root{
+  color-scheme: light;
+  --bg:#f9f9f7; --surface:#fcfcfb; --surface-2:#f2f1ed;
+  --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
+  --border:rgba(11,11,11,0.10);
+  --accent:#2a78d6; --accent-ink:#ffffff;
+  --good:#0ca30c; --warning:#fab219; --critical:#d03b3b;
+  --series-1:#2a78d6; --series-2:#eb6834; --series-3:#1baf7a; --series-4:#eda100; --series-5:#e87ba4;
+  --grid:#e1e0d9; --axis:#c3c2b7;
+  --seq-1:#cde2fb; --seq-2:#9ec5f4; --seq-3:#6da7ec; --seq-4:#3987e5; --seq-5:#256abf; --seq-6:#184f95; --seq-7:#0d366b;
+  --seq-1-ink:#0b0b0b; --seq-2-ink:#0b0b0b; --seq-3-ink:#0b0b0b; --seq-4-ink:#ffffff; --seq-5-ink:#ffffff; --seq-6-ink:#ffffff; --seq-7-ink:#ffffff;
+  --font-display:'Space Grotesk',system-ui,-apple-system,sans-serif;
+  --font-body:'Inter',system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --bg:#0d0d0d; --surface:#1a1a19; --surface-2:#232321;
+    --ink:#f0efec; --ink-2:#c3c2b7; --muted:#898781;
+    --border:rgba(255,255,255,0.10);
+    --accent:#3987e5; --accent-ink:#ffffff;
+    --good:#0ca30c; --warning:#fab219; --critical:#d03b3b;
+    --series-1:#3987e5; --series-2:#d95926; --series-3:#199e70; --series-4:#c98500; --series-5:#d55181;
+    --grid:#2c2c2a; --axis:#383835;
+    --seq-1:#0d366b; --seq-2:#184f95; --seq-3:#256abf; --seq-4:#3987e5; --seq-5:#6da7ec; --seq-6:#9ec5f4; --seq-7:#cde2fb;
+    --seq-1-ink:#ffffff; --seq-2-ink:#ffffff; --seq-3-ink:#ffffff; --seq-4-ink:#ffffff; --seq-5-ink:#0b0b0b; --seq-6-ink:#0b0b0b; --seq-7-ink:#0b0b0b;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#0d0d0d; --surface:#1a1a19; --surface-2:#232321;
+  --ink:#f0efec; --ink-2:#c3c2b7; --muted:#898781;
+  --border:rgba(255,255,255,0.10);
+  --accent:#3987e5; --accent-ink:#ffffff;
+  --good:#0ca30c; --warning:#fab219; --critical:#d03b3b;
+  --series-1:#3987e5; --series-2:#d95926; --series-3:#199e70; --series-4:#c98500; --series-5:#d55181;
+  --grid:#2c2c2a; --axis:#383835;
+  --seq-1:#0d366b; --seq-2:#184f95; --seq-3:#256abf; --seq-4:#3987e5; --seq-5:#6da7ec; --seq-6:#9ec5f4; --seq-7:#cde2fb;
+  --seq-1-ink:#ffffff; --seq-2-ink:#ffffff; --seq-3-ink:#ffffff; --seq-4-ink:#ffffff; --seq-5-ink:#0b0b0b; --seq-6-ink:#0b0b0b; --seq-7-ink:#0b0b0b;
+}
+*{box-sizing:border-box;}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:var(--font-body); font-size:14px; line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left,0px));
+  padding-right:max(16px, env(safe-area-inset-right,0px));
+}
+h1,h2,h3{font-family:var(--font-display); font-weight:600; text-wrap:balance; margin:0;}
+.tnum{font-variant-numeric:tabular-nums;}
+a{color:var(--accent);}
+.topbar{display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap; padding:20px 0 12px; border-bottom:1px solid var(--border); margin-bottom:0;}
+.topbar h1{font-size:20px;}
+.topbar .sub{color:var(--muted); font-size:12px;}
+nav.tabs{display:flex; gap:4px; overflow-x:auto; padding:10px 0; border-bottom:1px solid var(--border); margin-bottom:20px; scrollbar-width:thin;}
+nav.tabs a{flex:0 0 auto; padding:7px 13px; border-radius:7px; color:var(--ink-2); text-decoration:none; font-size:13px; font-weight:500; white-space:nowrap; border:1px solid transparent;}
+nav.tabs a.active{background:var(--accent); color:var(--accent-ink);}
+nav.tabs a:not(.active):hover{background:var(--surface-2); border-color:var(--border);}
+main{padding-bottom:48px; min-width:0;}
+.panel{display:flex; flex-direction:column; gap:20px;}
+.card{background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:18px 20px; min-width:0;}
+.card h2{font-size:15px; margin-bottom:4px;}
+.card .hint{color:var(--muted); font-size:12.5px; margin-bottom:14px;}
+.row{display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end;}
+.field{display:flex; flex-direction:column; gap:4px; min-width:0;}
+.field label{font-size:11.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.04em;}
+input,select,textarea,button{font-family:var(--font-body); font-size:13.5px; color:var(--ink); background:var(--surface-2); border:1px solid var(--border); border-radius:7px; padding:8px 10px;}
+textarea{min-height:64px; resize:vertical; font-family:inherit;}
+input,select{height:36px;}
+input[type="checkbox"]{width:auto; height:auto; accent-color:var(--accent);}
+button{cursor:pointer; font-weight:600; border-color:var(--border);}
+button.primary{background:var(--accent); color:var(--accent-ink); border-color:transparent;}
+button.primary:disabled{opacity:.55; cursor:default;}
+button.ghost{background:transparent;}
+button.danger{color:var(--critical); border-color:var(--critical);}
+button:hover:not(:disabled){filter:brightness(1.05);}
+table{width:100%; border-collapse:collapse; font-size:13px;}
+table th{text-align:left; color:var(--muted); font-weight:500; font-size:11px; text-transform:uppercase; letter-spacing:.04em; padding:6px 8px; border-bottom:1px solid var(--border);}
+table td{padding:8px 8px; border-bottom:1px solid var(--border); vertical-align:top;}
+.tablewrap{overflow-x:auto;}
+.chip{display:inline-flex; align-items:center; gap:5px; padding:2px 9px; border-radius:100px; font-size:11.5px; font-weight:600; background:var(--surface-2); border:1px solid var(--border);}
+.dot{width:8px; height:8px; border-radius:50%; flex:0 0 auto;}
+.muted{color:var(--muted);}
+.empty{color:var(--muted); font-size:13px; padding:20px 0; text-align:center;}
+.hr{height:1px; background:var(--border); margin:4px 0;}
+.badge{font-size:11px; padding:2px 7px; border-radius:5px; font-weight:600;}
+.badge.good{background:var(--good); color:#fff;}
+.badge.warning{background:var(--warning); color:#0b0b0b;}
+.badge.critical{background:var(--critical); color:#fff;}
+.analysis-out{white-space:pre-wrap; font-size:13.5px; line-height:1.6;}
+.legend{display:flex; gap:14px; flex-wrap:wrap; font-size:12px; color:var(--ink-2); margin-top:8px;}
+.legend span{display:inline-flex; align-items:center; gap:6px;}
+#chartTip{position:fixed; pointer-events:none; background:var(--ink); color:var(--bg); font-size:12px; padding:5px 9px; border-radius:6px; z-index:50; display:none; font-variant-numeric:tabular-nums; max-width:220px;}
+[data-theme="dark"] #chartTip, :root:not([data-theme="light"]) #chartTip{}
+.imgrow{display:flex; gap:10px; flex-wrap:wrap;}
+.imgcard{width:110px;}
+.imgcard img{width:100%; height:80px; object-fit:cover; border-radius:6px; border:1px solid var(--border);}
+.imgcard .capt{font-size:11px; color:var(--muted); margin-top:3px;}
+.stat{display:flex; flex-direction:column; gap:2px;}
+.stat .n{font-size:22px; font-weight:600; font-family:var(--font-display);}
+.stat .l{font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.04em;}
+.grid-stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(110px,1fr)); gap:14px;}
+code.inline{background:var(--surface-2); padding:1px 5px; border-radius:4px; font-size:12px;}
+.toolbar{display:flex; gap:8px; align-items:center; flex-wrap:wrap;}
+.dropzone{border:2px dashed var(--border); border-radius:10px; padding:14px; cursor:pointer; min-height:64px; display:flex; flex-direction:column; gap:8px; align-items:flex-start; transition:border-color .15s,background .15s;}
+.dropzone.drag-over{border-color:var(--accent); background:var(--surface-2);}
+.dropzone-hint{color:var(--muted); font-size:12.5px;}
+.dropzone-thumbs{display:flex; flex-wrap:wrap; gap:8px;}
+.shot-thumb{position:relative; width:64px; height:64px;}
+.shot-thumb img{width:100%; height:100%; object-fit:cover; border-radius:6px; border:1px solid var(--border);}
+.shot-remove{position:absolute; top:-6px; right:-6px; width:18px; height:18px; border-radius:50%; background:var(--critical); color:#fff; border:none; font-size:11px; line-height:1; padding:0; cursor:pointer; display:flex; align-items:center; justify-content:center;}
+@media (max-width:640px){
+  .row{flex-direction:column; align-items:stretch;}
+  .field{width:100%;}
+}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap">
+
+<div class="topbar">
+  <div>
+    <h1>Social Audit Console</h1>
+    <div class="sub">Competitive social media audit — engagement, owned terms, sentiment, paid ads, visual style</div>
+  </div>
+  <div class="sub" id="dbStatus">Loading…</div>
+</div>
+
+<nav class="tabs" id="tabs">
+  <a href="#setup" data-tab="setup">Setup</a>
+  <a href="#presence" data-tab="presence">Presence</a>
+  <a href="#engagement" data-tab="engagement">Engagement</a>
+  <a href="#terms" data-tab="terms">Terms</a>
+  <a href="#sentiment" data-tab="sentiment">Sentiment</a>
+  <a href="#ads" data-tab="ads">Paid Ads</a>
+  <a href="#visual" data-tab="visual">Visual Style</a>
+  <a href="#reviews" data-tab="reviews">Review Sites</a>
+  <a href="#appstore" data-tab="appstore">App Store</a>
+  <a href="#synthesis" data-tab="synthesis">Synthesis</a>
+  <a href="#trends" data-tab="trends">Trends</a>
+</nav>
+
+<main id="main"></main>
+<div id="chartTip"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------- constants ---------- */
+var PLATFORMS = ["Instagram","Facebook","TikTok","X","LinkedIn","YouTube","Pinterest","Other"];
+var ADS_PLATFORMS = ["Meta Ads","TikTok","X","LinkedIn","YouTube","Pinterest","Google Ads","Other"];
+var STORES = ["App Store","Google Play"];
+var REVIEW_SITES = ["G2","Capterra","TrustRadius","Software Advice","Gartner Peer Insights","Other"];
+var MEDIA_TYPES = ["Photo","Carousel","Video","Reel/Short","Text","Story","Live"];
+var SERIES_VARS = ["--series-1","--series-2","--series-3","--series-4","--series-5"];
+/* Which metrics each platform actually shows publicly, and what it calls them.
+   Field keys stay canonical (likes/comments/shares/views) so charts and analysis
+   can sum across platforms; only the visible fields and their labels change. */
+var PLATFORM_METRICS = {
+  "Instagram": [["likes","Likes"],["comments","Comments"],["shares","Shares"],["views","Views"]],
+  "Facebook":  [["likes","Reactions"],["comments","Comments"],["shares","Shares"],["views","Views"]],
+  "TikTok":    [["likes","Likes"],["comments","Comments"],["shares","Shares"],["views","Views"]],
+  "X":         [["likes","Likes"],["comments","Replies"],["shares","Reposts"],["views","Views"]],
+  "LinkedIn":  [["likes","Reactions"],["comments","Comments"],["shares","Reposts"],["views","Impressions"]],
+  "YouTube":   [["likes","Likes"],["comments","Comments"],["views","Views"]],
+  "Pinterest": [["likes","Reactions"],["comments","Comments"],["shares","Saves"],["views","Views"]],
+  "Other":     [["likes","Likes"],["comments","Comments"],["shares","Shares"],["views","Views"]]
+};
+function metricFieldsHtml(platform, vals){
+  var defs = PLATFORM_METRICS[platform] || PLATFORM_METRICS.Other;
+  return defs.map(function(d){
+    var key = d[0], label = d[1];
+    var v = vals && vals[key]!=null && vals[key]!=="" ? vals[key] : "";
+    return '<div class="field"><label>'+esc(label)+'</label><input name="'+key+'" type="number" min="0" value="'+esc(v)+'"></div>';
+  }).join("");
+}
+
+/* ---------- tiny helpers ---------- */
+function qs(s,el){return (el||document).querySelector(s);}
+function qsa(s,el){return Array.prototype.slice.call((el||document).querySelectorAll(s));}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function fmtNum(n){ n = Number(n)||0; if(Math.abs(n)>=1000000) return (n/1000000).toFixed(1)+"M"; if(Math.abs(n)>=1000) return (n/1000).toFixed(1)+"K"; return String(Math.round(n)); }
+function fmtPct(n){ n = Number(n)||0; return (n*100).toFixed(n<0.001?3:2)+"%"; }
+function fmtDate(s){ if(!s) return "—"; var d=new Date(s); if(isNaN(d)) return esc(s); return d.toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"}); }
+function nowIso(){return new Date().toISOString();}
+function uid(){return Math.random().toString(36).slice(2,10);}
+function options(list, sel){ return list.map(function(o){return '<option value="'+esc(o)+'"'+(o===sel?' selected':'')+'>'+esc(o)+'</option>';}).join(""); }
+function showTip(x,y,html){ var t=qs("#chartTip"); t.innerHTML=html; t.style.display="block"; t.style.left=Math.min(x+12, window.innerWidth-230)+"px"; t.style.top=(y+12)+"px"; }
+function hideTip(){ qs("#chartTip").style.display="none"; }
+
+/* ---------- state ---------- */
+var state = {
+  brands: [], presence: [], posts: [], comments: [], ads: [], appListings: [], appScreenshots: [], reviewListings: [], reviewScreenshots: [],
+  analysis: {}, snapshots: [], ready: false
+};
+var caps = { db:null, user:null, assets:null, sample:null };
+var runningCalls = {}; // key -> AbortController
+var editing = { presence:null, post:null, ad:null, comment:null, appListing:null, reviewListing:null }; // id currently being edited, per module
+var pendingPostScreenshots = null; // [{id,url}] staged for the post form; null = not yet initialized for this form session
+var imageAnalysisErrors = {}; // analysis key (e.g. "visual_<brandId>", "appVisual_<brandId>") -> last sample() error code
+
+/* colored brand order: target first (series-1), then competitors by createdAt */
+function coloredBrands(){
+  var target = state.brands.filter(function(b){return b.isTarget;});
+  var rest = state.brands.filter(function(b){return !b.isTarget;}).slice().sort(function(a,b){return (a.createdAt||"").localeCompare(b.createdAt||"");});
+  var ordered = target.concat(rest);
+  return ordered.map(function(b,i){ return Object.assign({}, b, { colorVar: SERIES_VARS[i % SERIES_VARS.length] }); });
+}
+function brandColorVar(id){ var c = coloredBrands().filter(function(b){return b.id===id;})[0]; return c ? c.colorVar : "--muted"; }
+function brandById(id){ return state.brands.filter(function(b){return b.id===id;})[0]; }
+function brandName(id){ var b=brandById(id); return b ? b.name : "(deleted brand)"; }
+
+/* ---------- boot ---------- */
+async function boot(){
+  if(!window.claude || !window.claude.use){ qs("#dbStatus").textContent="No Claude runtime — read-only"; renderRoute(); return; }
+  caps.db = await window.claude.use("db").catch(function(){return null;});
+  caps.user = await window.claude.use("user").catch(function(){return null;});
+  caps.assets = await window.claude.use("assets").catch(function(){return null;});
+  caps.sample = await window.claude.use("sample").catch(function(){return null;});
+
+  if(!caps.db){ qs("#dbStatus").textContent="Storage unavailable in this view"; renderRoute(); return; }
+
+  var timeoutFlag = {hit:false};
+  var loadTimer = setTimeout(function(){ timeoutFlag.hit=true; qs("#dbStatus").textContent="Still connecting…"; }, 10000);
+
+  function sub(colName, stateKey, idField){
+    caps.db.collection(colName).onSnapshot(function(snap){
+      clearTimeout(loadTimer);
+      state[stateKey] = snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data()); });
+      qs("#dbStatus").textContent = "Synced";
+      state.ready = true;
+      renderRoute();
+    }, function(err){
+      qs("#dbStatus").textContent = "Sync error: " + err.code;
+    });
+  }
+  sub("brands","brands");
+  sub("presence","presence");
+  sub("posts","posts");
+  sub("postComments","comments");
+  sub("ads","ads");
+  sub("reviewListings","reviewListings");
+  sub("reviewScreenshots","reviewScreenshots");
+  sub("appListings","appListings");
+  sub("appScreenshots","appScreenshots");
+  sub("snapshots","snapshots");
+  caps.db.collection("analysis").onSnapshot(function(snap){
+    var by = {};
+    snap.docs.forEach(function(d){ by[d.id] = Object.assign({id:d.id}, d.data()); });
+    state.analysis = by;
+    renderRoute();
+  }, function(){});
+
+  renderRoute();
+}
+
+/* ---------- routing ---------- */
+var ROUTES = ["setup","presence","engagement","terms","sentiment","ads","visual","reviews","appstore","synthesis","trends"];
+function currentRoute(){
+  var h = (location.hash||"").replace("#","");
+  return ROUTES.indexOf(h) >= 0 ? h : "setup";
+}
+window.addEventListener("hashchange", renderRoute);
+
+function renderRoute(){
+  var route = currentRoute();
+  qsa("#tabs a").forEach(function(a){ a.classList.toggle("active", a.getAttribute("data-tab")===route); });
+  var main = qs("#main");
+  if(!state.ready && caps.db){ main.innerHTML = '<div class="empty">Loading your audit…</div>'; return; }
+  var fn = RENDERERS[route];
+  main.innerHTML = fn ? fn() : "";
+  wireRoute(route);
+}
+
+var RENDERERS = {
+  setup: renderSetup, presence: renderPresence, engagement: renderEngagement,
+  terms: renderTerms, sentiment: renderSentiment, ads: renderAds,
+  visual: renderVisual, reviews: renderReviews, appstore: renderAppStore, synthesis: renderSynthesis, trends: renderTrends
+};
+
+/* =========================================================
+   SETUP
+   ========================================================= */
+function renderSetup(){
+  var cb = coloredBrands();
+  var rows = cb.map(function(b){
+    return '<tr>'+
+      '<td><span class="dot" style="background:var('+b.colorVar+')"></span></td>'+
+      '<td>'+esc(b.name)+ (b.isTarget ? ' <span class="chip">Target</span>' : '') +'</td>'+
+      '<td class="muted">'+esc(b.notes||"")+'</td>'+
+      '<td><button class="ghost" data-act="set-target" data-id="'+b.id+'">Make target</button> '+
+      '<button class="danger ghost" data-act="del-brand" data-id="'+b.id+'">Remove</button></td>'+
+    '</tr>';
+  }).join("") || '<tr><td colspan="4" class="empty">No brands yet — add your target brand first, then 3–4 competitors.</td></tr>';
+
+  return '<div class="panel">'+
+    '<div class="card">'+
+      '<h2>Brands in this audit</h2>'+
+      '<div class="hint">Add the target brand first and mark it as Target, then add competitors. Target is always the first color in every chart.</div>'+
+      '<div class="tablewrap"><table><thead><tr><th></th><th>Brand</th><th>Notes</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
+    '</div>'+
+    '<div class="card">'+
+      '<h2>Add a brand</h2>'+
+      '<form id="brandForm" class="row">'+
+        '<div class="field"><label>Name</label><input required name="name" placeholder="e.g. Acme Co."></div>'+
+        '<div class="field"><label>Notes</label><input name="notes" placeholder="optional"></div>'+
+        '<div class="field"><label>Role</label><select name="isTarget"><option value="false">Competitor</option><option value="true">Target brand</option></select></div>'+
+        '<button class="primary" type="submit">Add brand</button>'+
+      '</form>'+
+    '</div>'+
+    '<div class="card">'+
+      '<h2>How data gets in</h2>'+
+      '<div class="hint" style="margin-bottom:0">'+
+        'Every other tab works the same way: fill in a short form per post/comment/ad/screenshot you copy from the platform, or paste a JSON batch where noted. '+
+        'YouTube can skip manual copying — ask Claude for the <b>YouTube pull helper script</b> (run locally with a free API key) and paste its output into the Engagement tab’s bulk-import box.'+
+      '</div>'+
+    '</div>'+
+  '</div>';
+}
+function wireSetup(){
+  var f = qs("#brandForm"); if(!f) return;
+  f.addEventListener("submit", async function(e){
+    e.preventDefault();
+    if(!caps.db) return;
+    var fd = new FormData(f);
+    var isTarget = fd.get("isTarget")==="true";
+    if(isTarget){
+      await Promise.all(state.brands.filter(function(b){return b.isTarget;}).map(function(b){
+        return caps.db.collection("brands").doc(b.id).update({isTarget:false});
+      }));
+    }
+    await caps.db.collection("brands").add({
+      name: fd.get("name"), notes: fd.get("notes")||"", isTarget: isTarget, createdAt: nowIso()
+    });
+    f.reset();
+  });
+}
+
+/* =========================================================
+   PRESENCE
+   ========================================================= */
+function renderPresence(){
+  var cb = coloredBrands();
+  if(cb.length===0) return '<div class="empty">Add brands in Setup first.</div>';
+  var rows = "";
+  cb.forEach(function(b){
+    var entries = state.presence.filter(function(p){return p.brandId===b.id;});
+    if(entries.length===0){
+      rows += '<tr><td><span class="chip"><span class="dot" style="background:var('+b.colorVar+')"></span>'+esc(b.name)+'</span></td><td colspan="5" class="empty">No platforms scanned yet</td></tr>';
+    } else {
+      entries.forEach(function(p,i){
+        rows += '<tr>'+
+          (i===0 ? '<td rowspan="'+entries.length+'"><span class="chip"><span class="dot" style="background:var('+b.colorVar+')"></span>'+esc(b.name)+'</span></td>' : '')+
+          '<td>'+esc(p.platform)+'</td>'+
+          '<td class="tnum">'+fmtNum(p.followers)+'</td>'+
+          '<td>'+fmtDate(p.lastPostDate)+'</td>'+
+          '<td>'+esc(p.cadence||"—")+'</td>'+
+          '<td class="muted">'+esc(p.bioNotes||"")+'</td>'+
+          '<td><button class="ghost" data-act="edit-presence" data-id="'+p.id+'">Edit</button> <button class="danger ghost" data-act="del-presence" data-id="'+p.id+'">×</button></td>'+
+        '</tr>';
+      });
+    }
+  });
+  var editRec = editing.presence ? state.presence.filter(function(p){return p.id===editing.presence;})[0] : null;
+  return '<div class="panel">'+
+    '<div class="card">'+
+      '<h2>Presence &amp; activity matrix</h2>'+
+      '<div class="hint">Visit each brand’s public profile per platform and log the basics. Use this to decide which platforms are worth a deep audit.</div>'+
+      '<div class="tablewrap"><table><thead><tr><th>Brand</th><th>Platform</th><th>Followers</th><th>Last post</th><th>Cadence</th><th>Bio / notes</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
+    '</div>'+
+    '<div class="card">'+
+      '<h2>'+(editRec?'Edit platform entry':'Log a platform')+'</h2>'+
+      '<form id="presenceForm" class="row">'+
+        '<div class="field"><label>Brand</label><select required name="brandId">'+brandOptionsHtml(editRec?editRec.brandId:null)+'</select></div>'+
+        '<div class="field"><label>Platform</label><select name="platform">'+options(PLATFORMS, editRec?editRec.platform:null)+'</select></div>'+
+        '<div class="field"><label>Followers</label><input name="followers" type="number" min="0" placeholder="12000" value="'+(editRec?Number(editRec.followers)||0:'')+'"></div>'+
+        '<div class="field"><label>Last post date</label><input name="lastPostDate" type="date" value="'+(editRec?esc(editRec.lastPostDate||""):"")+'"></div>'+
+        '<div class="field"><label>Posting cadence</label><input name="cadence" placeholder="e.g. 4/week" value="'+(editRec?esc(editRec.cadence||""):"")+'"></div>'+
+        '<div class="field" style="flex:1 1 180px"><label>Bio / notes</label><input name="bioNotes" placeholder="optional" value="'+(editRec?esc(editRec.bioNotes||""):"")+'"></div>'+
+        '<button class="primary" type="submit">'+(editRec?'Save changes':'Save')+'</button>'+
+        (editRec?' <button type="button" class="ghost" data-act="cancel-presence-edit">Cancel</button>':'')+
+      '</form>'+
+    '</div>'+
+  '</div>';
+}
+function brandOptionsHtml(sel){
+  return '<option value="">Select…</option>' + coloredBrands().map(function(b){return '<option value="'+b.id+'"'+(b.id===sel?' selected':'')+'>'+esc(b.name)+(b.isTarget?" (target)":"")+'</option>';}).join("");
+}
+function wirePresence(){
+  var f = qs("#presenceForm"); if(!f) return;
+  f.addEventListener("submit", async function(e){
+    e.preventDefault();
+    var fd = new FormData(f);
+    var brandId = fd.get("brandId"); if(!brandId) return;
+    var platform = fd.get("platform");
+    var docId = brandId+"__"+platform;
+    var prevId = editing.presence;
+    await caps.db.collection("presence").doc(docId).set({
+      brandId: brandId, platform: platform,
+      followers: Number(fd.get("followers"))||0,
+      lastPostDate: fd.get("lastPostDate")||"",
+      cadence: fd.get("cadence")||"",
+      bioNotes: fd.get("bioNotes")||"",
+      updatedAt: nowIso()
+    });
+    if(prevId && prevId!==docId){ await caps.db.collection("presence").doc(prevId).delete(); }
+    editing.presence = null;
+    f.reset();
+  });
+}
+
+/* =========================================================
+   ENGAGEMENT
+   ========================================================= */
+function followersFor(brandId, platform){
+  var p = state.presence.filter(function(x){return x.brandId===brandId && x.platform===platform;})[0];
+  return p ? Number(p.followers)||0 : 0;
+}
+function renderEngagement(){
+  var cb = coloredBrands();
+  if(cb.length===0) return '<div class="empty">Add brands in Setup first.</div>';
+
+  var grouped = {}; // mediaType -> brandId -> {sum,count} of engagement RATE (per follower)
+  var skippedNoFollowers = 0;
+  state.posts.forEach(function(p){
+    var followers = followersFor(p.brandId, p.platform);
+    if(!followers){ skippedNoFollowers++; return; }
+    var mt = p.mediaType || "Other";
+    grouped[mt] = grouped[mt] || {};
+    grouped[mt][p.brandId] = grouped[mt][p.brandId] || {sum:0,count:0};
+    var eng = (Number(p.likes)||0)+(Number(p.comments)||0)+(Number(p.shares)||0);
+    grouped[mt][p.brandId].sum += eng/followers;
+    grouped[mt][p.brandId].count += 1;
+  });
+  var mediaTypesPresent = Object.keys(grouped);
+  var chart = mediaTypesPresent.length ? buildGroupedBarChart(grouped, mediaTypesPresent, cb) :
+    '<div class="empty">'+(state.posts.length ? 'Add follower counts in Presence for these brands/platforms to see engagement rate.' : 'No posts logged yet — add some below.')+'</div>';
+  var followerNote = skippedNoFollowers ? '<div class="muted" style="font-size:12px;margin-top:6px">'+skippedNoFollowers+' post(s) excluded — no follower count logged in Presence for that brand/platform.</div>' : '';
+
+  var postsRows = state.posts.slice().sort(function(a,b){return (b.postedAt||"").localeCompare(a.postedAt||"");}).map(function(p){
+    var colorVar = brandColorVar(p.brandId);
+    var eng = (Number(p.likes)||0)+(Number(p.comments)||0)+(Number(p.shares)||0);
+    var shots = p.screenshotAssetIds || [];
+    var shotsHtml = shots.slice(0,3).map(function(id){return '<img src="/_blob/'+id+'" style="width:26px;height:26px;object-fit:cover;border-radius:4px;margin-right:2px;vertical-align:middle">';}).join("") + (shots.length>3 ? '<span class="muted" style="font-size:11px">+'+(shots.length-3)+'</span>' : "");
+    return '<tr>'+
+      '<td><span class="chip"><span class="dot" style="background:var('+colorVar+')"></span>'+esc(brandName(p.brandId))+'</span></td>'+
+      '<td>'+esc(p.platform)+(p.isPaidPartnership?' <span class="badge warning">Paid partnership</span>':'')+'</td><td>'+esc(p.mediaType)+'</td>'+
+      '<td class="muted" style="max-width:260px">'+esc((p.caption||"").slice(0,120))+'</td>'+
+      '<td>'+fmtDate(p.postedAt)+'</td>'+
+      '<td class="tnum">'+fmtNum(eng)+'</td>'+
+      '<td class="tnum">'+fmtNum(p.views)+'</td>'+
+      '<td>'+(shotsHtml||"—")+'</td>'+
+      '<td><button class="ghost" data-act="edit-post" data-id="'+p.id+'">Edit</button> <button class="danger ghost" data-act="del-post" data-id="'+p.id+'">×</button></td>'+
+    '</tr>';
+  }).join("") || '<tr><td colspan="9" class="empty">No posts yet</td></tr>';
+
+  var editRec = editing.post ? state.posts.filter(function(p){return p.id===editing.post;})[0] : null;
+  if(pendingPostScreenshots===null){
+    pendingPostScreenshots = editRec ? (editRec.screenshotAssetIds||[]).map(function(id){return {id:id, url:"/_blob/"+id};}) : [];
+  }
+  var analysis = state.analysis.engagement;
+  var running = !!runningCalls.engagement;
+
+  return '<div class="panel">'+
+    '<div class="card">'+
+      '<h2>Engagement rate by content type</h2>'+
+      '<div class="hint">(likes + comments + shares) ÷ followers, averaged per post and grouped by media type and brand — normalized so brands with different audience sizes are comparable. Needs a follower count logged in Presence for each brand/platform.</div>'+
+      chart+followerNote+
+    '</div>'+
+    '<div class="card">'+
+      '<h2>What’s driving it</h2>'+
+      '<div class="hint">Claude reads the logged posts and explains what content characteristics correlate with higher engagement — not just the numbers.</div>'+
+      '<div class="toolbar">'+
+        '<button class="primary" id="runEngagement" '+(running?'disabled':'')+'>'+(running?'Thinking…':(analysis?'Re-run analysis':'Run analysis'))+'</button>'+
+        (running ? '<button class="ghost" id="stopEngagement">Stop</button>' : '')+
+        (analysis ? '<span class="muted">Last run '+fmtDate(analysis.generatedAt)+'</span>' : '')+
+      '</div>'+
+      '<div class="analysis-out" id="engagementOut" style="margin-top:12px">'+(analysis ? esc(analysis.resultText) : (running?'':'<span class="muted">No analysis yet.</span>'))+'</div>'+
+    '</div>'+
+    '<div class="card">'+
+      '<h2>'+(editRec?'Edit post':'Log a post')+'</h2>'+
+      '<form id="postForm" class="row">'+
+        '<div class="field"><label>Brand</label><select required name="brandId">'+brandOptionsHtml(editRec?editRec.brandId:null)+'</select></div>'+
+        '<div class="field"><label>Platform</label><select name="platform">'+options(PLATFORMS, editRec?editRec.platform:null)+'</select></div>'+
+        '<div class="field"><label>Media type</label><select name="mediaType">'+options(MEDIA_TYPES, editRec?editRec.mediaType:null)+'</select></div>'+
+        '<div class="field"><label>Posted date</label><input name="postedAt" type="date" value="'+(editRec?esc(editRec.postedAt||""):"")+'"></div>'+
+        '<div id="postMetricsFields" style="display:contents">'+
+          metricFieldsHtml(editRec?editRec.platform:PLATFORMS[0], editRec?{likes:editRec.likes,comments:editRec.comments,shares:editRec.shares,views:editRec.views}:null)+
+        '</div>'+
+        '<div class="field" style="flex:1 1 260px"><label>Caption</label><input name="caption" placeholder="paste the caption" value="'+(editRec?esc(editRec.caption||""):"")+'"></div>'+
+        '<div class="field" style="flex:1 1 180px"><label>Hashtags (comma-separated)</label><input name="hashtags" placeholder="#brand, #launch" value="'+(editRec?esc((editRec.hashtags||[]).join(", ")):"")+'"></div>'+
+        '<div class="field"><label>Disclosure</label><label style="display:flex;align-items:center;gap:6px;height:36px;white-space:nowrap"><input type="checkbox" name="isPaidPartnership"'+(editRec&&editRec.isPaidPartnership?' checked':'')+'> Paid partnership</label></div>'+
+        '<div class="field" style="flex:1 1 100%">'+
+          '<label>Screenshots (multiple allowed — carousels, galleries)</label>'+
+          '<div class="dropzone" id="postShotsDrop">'+
+            '<div class="dropzone-hint">Drag screenshots here, or click to browse</div>'+
+            '<div class="dropzone-thumbs" id="postShotsThumbs">'+
+              pendingPostScreenshots.map(function(s,i){return '<div class="shot-thumb"><img src="'+s.url+'"><button type="button" class="shot-remove" data-idx="'+i+'">×</button></div>';}).join("")+
+            '</div>'+
+          '</div>'+
+          '<input type="file" id="postShotsInput" accept="image/*" multiple hidden>'+
+        '</div>'+
+        '<button class="primary" type="submit">'+(editRec?'Save changes':'Add post')+'</button>'+
+        (editRec?' <button type="button" class="ghost" data-act="cancel-post-edit">Cancel</button>':'')+
+      '</form>'+
+      '<div class="hr"></div>'+
+      '<div class="hint">Bulk import (e.g. the YouTube helper script’s output): paste a JSON array of post objects for one brand.</div>'+
+      '<div class="row">'+
+        '<div class="field"><label>Importing for brand</label><select id="bulkBrandId">'+brandOptionsHtml()+'</select></div>'+
+      '</div>'+
+      '<textarea id="bulkPosts" placeholder=\'[{"platform":"YouTube","mediaType":"Video","caption":"...","hashtags":[],"postedAt":"2026-10-01","likes":120,"comments":10,"shares":0,"views":4000}]\'></textarea>'+
+      '<button class="ghost" id="importPosts" style="margin-top:8px">Import JSON</button>'+
+    '</div>'+
+    '<div class="card">'+
+      '<h2>Logged posts ('+state.posts.length+')</h2>'+
+      '<div class="tablewrap"><table><thead><tr><th>Brand</th><th>Platform</th><th>Type</th><th>Caption</th><th>Date</th><th>Engagement</th><th>Views</th><th>Shots</th><th></th></tr></thead><tbody>'+postsRows+'</tbody></table></div>'+
+    '</div>'+
+  '</div>';
+}
+
+function buildGroupedBarChart(grouped, mediaTypes, cb){
+  var W=680,H=300,padL=44,padR=16,padT=16,padB=36;
+  var plotW = W-padL-padR, plotH = H-padT-padB;
+  var maxVal = 0;
+  mediaTypes.forEach(function(mt){ cb.forEach(function(b){ var g=grouped[mt][b.id]; if(g){ var v=g.sum/g.count; if(v>maxVal) maxVal=v; } }); });
+  if(!maxVal) maxVal = 0.01;
+  var groupW = plotW/mediaTypes.length;
+  var barGap = 3, groupPad = 14;
+  var barW = Math.max(6,(groupW-groupPad*2-barGap*(cb.length-1))/Math.max(1,cb.length));
+  var svg = '';
+  // gridlines
+  var ticks=4;
+  for(var t=0;t<=ticks;t++){
+    var yy = padT + plotH - (plotH*t/ticks);
+    svg += '<line x1="'+padL+'" y1="'+yy+'" x2="'+(W-padR)+'" y2="'+yy+'" stroke="var(--grid)" stroke-width="1"/>';
+    svg += '<text x="'+(padL-8)+'" y="'+(yy+4)+'" text-anchor="end" font-size="10" fill="var(--muted)">'+fmtPct(maxVal*t/ticks)+'</text>';
+  }
+  mediaTypes.forEach(function(mt,gi){
+    var gx = padL + gi*groupW;
+    cb.forEach(function(b,bi){
+      var g = grouped[mt][b.id];
+      var v = g ? g.sum/g.count : 0;
+      var h = (v/maxVal)*plotH;
+      var x = gx + groupPad + bi*(barW+barGap);
+      var y = padT + plotH - h;
+      if(v>0){
+        svg += '<path data-tip="'+esc(brandName(b.id))+' · '+esc(mt)+': '+fmtPct(v)+' avg engagement rate" d="'+roundedTopRectPath(x,y,barW,h,3)+'" fill="var('+b.colorVar+')"></path>';
+      }
+    });
+    svg += '<text x="'+(gx+groupW/2)+'" y="'+(H-padB+16)+'" text-anchor="middle" font-size="11" fill="var(--ink-2)">'+esc(mt)+'</text>';
+  });
+  svg += '<line x1="'+padL+'" y1="'+(padT+plotH)+'" x2="'+(W-padR)+'" y2="'+(padT+plotH)+'" stroke="var(--axis)" stroke-width="1"/>';
+  var legend = cb.map(function(b){return '<span><span class="dot" style="background:var('+b.colorVar+')"></span>'+esc(b.name)+'</span>';}).join("");
+  return '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block" role="img">'+svg+'</svg><div class="legend">'+legend+'</div>';
+}
+function roundedTopRectPath(x,y,w,h,r){
+  r = Math.min(r, w/2, h);
+  if(h<=0) return '';
+  if(h<r) r=h;
+  return 'M'+x+','+(y+r)+' Q'+x+','+y+' '+(x+r)+','+y+' L'+(x+w-r)+','+y+' Q'+(x+w)+','+y+' '+(x+w)+','+(y+r)+' L'+(x+w)+','+(y+h)+' L'+x+','+(y+h)+' Z';
+}
+
+function wireEngagement(){
+  var f = qs("#postForm");
+  if(f) f.addEventListener("submit", async function(e){
+    e.preventDefault();
+    var fd = new FormData(f);
+    var data = {
+      brandId: fd.get("brandId"), platform: fd.get("platform"), mediaType: fd.get("mediaType"),
+      caption: fd.get("caption")||"", hashtags: (fd.get("hashtags")||"").split(",").map(function(s){return s.trim();}).filter(Boolean),
+      postedAt: fd.get("postedAt")||"", likes:Number(fd.get("likes"))||0, comments:Number(fd.get("comments"))||0,
+      shares:Number(fd.get("shares"))||0, views:Number(fd.get("views"))||0,
+      isPaidPartnership: fd.get("isPaidPartnership")==="on",
+      screenshotAssetIds: pendingPostScreenshots.map(function(s){return s.id;})
+    };
+    if(editing.post){
+      await caps.db.collection("posts").doc(editing.post).update(data);
+      editing.post = null;
+    } else {
+      data.createdAt = nowIso();
+      await caps.db.collection("posts").add(data);
+    }
+    pendingPostScreenshots = null;
+    f.reset();
+  });
+  var platformSelect = f && f.querySelector('select[name="platform"]');
+  if(platformSelect) platformSelect.addEventListener("change", function(){
+    var vals = {};
+    ["likes","comments","shares","views"].forEach(function(k){
+      var inp = f.querySelector('input[name="'+k+'"]');
+      vals[k] = inp ? inp.value : "";
+    });
+    var holder = qs("#postMetricsFields");
+    if(holder) holder.innerHTML = metricFieldsHtml(platformSelect.value, vals);
+  });
+  var imp = qs("#importPosts");
+  if(imp) imp.addEventListener("click", async function(){
+    var brandId = qs("#bulkBrandId").value;
+    if(!brandId){ alertInline(imp,"Pick a brand first."); return; }
+    var raw = qs("#bulkPosts").value.trim();
+    if(!raw) return;
+    var parsed;
+    try{ parsed = JSON.parse(raw); }catch(e){ alertInline(imp,"That isn't valid JSON."); return; }
+    var posts = Array.isArray(parsed) ? parsed : (parsed.posts||[]);
+    if(parsed && parsed.presence){
+      await caps.db.collection("presence").doc(brandId+"__"+(parsed.presence.platform||"YouTube")).set(Object.assign({brandId:brandId, platform: parsed.presence.platform||"YouTube", updatedAt: nowIso()}, parsed.presence));
+    }
+    for(var i=0;i<posts.length;i++){
+      var p = posts[i];
+      await caps.db.collection("posts").add({
+        brandId: brandId, platform: p.platform||"YouTube", mediaType: p.mediaType||"Video",
+        caption: p.caption||"", hashtags: p.hashtags||[], postedAt: p.postedAt||"",
+        likes:Number(p.likes)||0, comments:Number(p.comments)||0, shares:Number(p.shares)||0, views:Number(p.views)||0,
+        createdAt: nowIso()
+      });
+    }
+    qs("#bulkPosts").value = "";
+    alertInline(imp, "Imported "+posts.length+" posts.");
+  });
+  var run = qs("#runEngagement");
+  if(run) run.addEventListener("click", function(){ runEngagementAnalysis(); });
+  var stop = qs("#stopEngagement");
+  if(stop) stop.addEventListener("click", function(){ if(runningCalls.engagement) runningCalls.engagement.abort(); });
+  wirePostScreenshots();
+}
+function wirePostScreenshots(){
+  var drop = qs("#postShotsDrop");
+  var input = qs("#postShotsInput");
+  if(!drop || !input) return;
+  drop.addEventListener("click", function(e){ if(e.target.closest(".shot-remove")) return; input.click(); });
+  drop.addEventListener("dragover", function(e){ e.preventDefault(); drop.classList.add("drag-over"); });
+  drop.addEventListener("dragleave", function(){ drop.classList.remove("drag-over"); });
+  drop.addEventListener("drop", function(e){
+    e.preventDefault(); drop.classList.remove("drag-over");
+    handlePostScreenshotFiles(e.dataTransfer.files);
+  });
+  input.addEventListener("change", function(){ handlePostScreenshotFiles(input.files); input.value=""; });
+  qsa(".shot-remove", drop).forEach(function(btn){
+    btn.addEventListener("click", function(e){
+      e.stopPropagation();
+      pendingPostScreenshots.splice(Number(btn.getAttribute("data-idx")), 1);
+      renderRoute();
+    });
+  });
+}
+async function handlePostScreenshotFiles(fileList){
+  if(!caps.assets || !fileList || !fileList.length) return;
+  var files = Array.prototype.slice.call(fileList).filter(function(f){return f.type && f.type.indexOf("image/")===0;});
+  for(var i=0;i<files.length;i++){
+    try{
+      var up = await caps.assets.upload(files[i]);
+      pendingPostScreenshots.push({id:up.id, url:up.url});
+      renderRoute();
+    }catch(e){}
+  }
+}
+function alertInline(nearEl, msg){
+  var n = document.createElement("span"); n.className="muted"; n.style.marginLeft="8px"; n.textContent=msg;
+  nearEl.insertAdjacentElement("afterend", n); setTimeout(function(){n.remove();}, 4000);
+}
+
+async function runEngagementAnalysis(){
+  if(!caps.sample || runningCalls.engagement) return;
+  var cb = coloredBrands();
+  var byBrand = {};
+  state.posts.forEach(function(p){ (byBrand[p.brandId]=byBrand[p.brandId]||[]).push(p); });
+  var lines = [];
+  cb.forEach(function(b){
+    var list = (byBrand[b.id]||[]).slice().sort(function(a,c){return (c.postedAt||"").localeCompare(a.postedAt||"");}).slice(0,40);
+    if(!list.length) return;
+    lines.push("## "+b.name+(b.isTarget?" (TARGET)":"")+"");
+    list.forEach(function(p){
+      var eng=(Number(p.likes)||0)+(Number(p.comments)||0)+(Number(p.shares)||0);
+      lines.push("- ["+p.platform+"/"+p.mediaType+(p.isPaidPartnership?"/PAID PARTNERSHIP":"")+"] eng="+eng+" views="+(p.views||0)+' caption="'+(p.caption||"").slice(0,150)+'" tags='+(p.hashtags||[]).join(" "));
+    });
+  });
+  if(!lines.length){ return; }
+  var prompt = "You are auditing competing brands' social media content. Below is logged post data per brand "+
+    "(engagement = likes+comments+shares).\n\n"+lines.join("\n")+
+    "\n\nWrite a concise analysis (plain text, no markdown headers, use short paragraphs and dashes for lists) covering: "+
+    "1) which content characteristics (format, topic, tone, length, hook style) correlate with higher engagement, overall and per brand; "+
+    "2) whether posts tagged PAID PARTNERSHIP perform differently from organic posts, where that comparison is possible; "+
+    "3) what the target brand is doing well or missing versus competitors; "+
+    "4) three concrete content recommendations for the target brand. Be specific, cite patterns from the captions, not generic advice. "+
+    "Focus every recommendation on the B2B/business-buyer side of the brand (the people and teams evaluating or using the product at work), not individual consumers — only bring up a B2C angle if it directly helps B2B pipeline, engagement or perception.";
+  var ctl = new AbortController(); runningCalls.engagement = ctl;
+  renderRoute();
+  try{
+    var out = qs("#engagementOut");
+    var res = await caps.sample(prompt, { modelTier:"default", signal: ctl.signal, onText: function(u){ if(out) out.textContent = u.text; } });
+    await caps.db.collection("analysis").doc("engagement").set({ module:"engagement", resultText: res.text, generatedAt: nowIso() });
+    await pushSnapshot("engagement", scoreEngagementPerBrand());
+  }catch(e){
+    if(e.code!=="cancelled"){ var out=qs("#engagementOut"); if(out) out.textContent = "Couldn't finish: "+e.code; }
+  }finally{
+    delete runningCalls.engagement; renderRoute();
+  }
+}
+function scoreEngagementPerBrand(){
+  var byBrand={};
+  state.posts.forEach(function(p){
+    var followers = followersFor(p.brandId, p.platform);
+    if(!followers) return;
+    var eng=(Number(p.likes)||0)+(Number(p.comments)||0)+(Number(p.shares)||0);
+    byBrand[p.brandId]=byBrand[p.brandId]||{sum:0,count:0}; byBrand[p.brandId].sum+=eng/followers; byBrand[p.brandId].count++;
+  });
+  var out={};
+  Object.keys(byBrand).forEach(function(id){ out[id] = byBrand[id].count ? byBrand[id].sum/byBrand[id].count : 0; });
+  return out;
+}
+
+/* =========================================================
+   TERMS
+   ========================================================= */
+function renderTerms(){
+  var cb = coloredBrands();
+  if(cb.length===0) return '<div class="empty">Add brands in Setup first.</div>';
+  var analysis = state.analysis.terms;
+  var running = !!runningCalls.terms;
+  var body = "";
+  var terms = analysis && analysis.resultJson && analysis.resultJson.terms;
+  var stale = terms && terms.length && !terms[0].scores;
+  if(stale){
+    body = '<div class="empty">This analysis was run before the chart view — click Re-run analysis.</div>';
+  } else if(terms && terms.length){
+    body = buildTermsHeatmap(terms, cb);
+    if(analysis.resultJson.summary) body += '<div class="analysis-out" style="margin-top:14px">'+esc(analysis.resultJson.summary)+'</div>';
+  } else if(running){
+    body = '<div class="muted">Thinking…</div>';
+  } else {
+    body = '<div class="empty">No analysis yet.</div>';
+  }
+  return '<div class="panel">'+
+    '<div class="card">'+
+      '<h2>Terms &amp; themes each brand owns</h2>'+
+      '<div class="hint">Claude reads the logged captions and hashtags across every brand and scores how strongly each brand is associated with each recurring aspect/term — darker and higher cells mean stronger ownership.</div>'+
+      '<div class="toolbar">'+
+        '<button class="primary" id="runTerms" '+(running?'disabled':'')+'>'+(running?'Thinking…':(analysis?'Re-run analysis':'Run analysis'))+'</button>'+
+        (analysis ? '<span class="muted">Last run '+fmtDate(analysis.generatedAt)+'</span>' : '')+
+      '</div>'+
+      '<div style="margin-top:12px">'+body+'</div>'+
+    '</div>'+
+  '</div>';
+}
+function wireTerms(){
+  var run = qs("#runTerms");
+  if(run) run.addEventListener("click", runTermsAnalysis);
+}
+function termScoreBin(score){
+  var s = Math.max(0, Math.min(100, Number(score)||0));
+  return Math.min(6, Math.floor(s/100*7))+1;
+}
+function measureTextWidth(text, font){
+  var c = measureTextWidth._c || (measureTextWidth._c = document.createElement("canvas"));
+  var ctx = c.getContext("2d");
+  ctx.font = font;
+  return ctx.measureText(text).width;
+}
+function buildTermsHeatmap(terms, cb){
+  var rows = terms.map(function(t){
+    var total = 0;
+    cb.forEach(function(b){ total += Number((t.scores||{})[b.name]) || 0; });
+    return { term: t.term, scores: t.scores||{}, total: total };
+  }).sort(function(a,c){ return c.total - a.total; });
+
+  var labelFont = "11.5px " + getComputedStyle(document.body).fontFamily;
+  var maxTermW = rows.reduce(function(m,r){ return Math.max(m, measureTextWidth(r.term, labelFont)); }, 0);
+  var labelW = Math.max(100, Math.min(320, Math.ceil(maxTermW) + 24));
+  var headerH = 40, rowH = 30, colW = 78, gap = 2, padR = 8, padB = 6;
+  var plotW = cb.length*colW + (cb.length-1)*gap;
+  var plotH = rows.length*rowH + (rows.length-1)*gap;
+  var W = labelW + plotW + padR;
+  var H = headerH + plotH + padB;
+
+  var svg = '';
+  cb.forEach(function(b, bi){
+    var x = labelW + bi*(colW+gap);
+    var cx = x + colW/2;
+    svg += '<text x="'+cx+'" y="'+(headerH-22)+'" text-anchor="middle" font-size="12" font-weight="'+(b.isTarget?'700':'500')+'" fill="var(--ink)">'+esc(b.name)+(b.isTarget?' *':'')+'</text>';
+    svg += '<rect x="'+x+'" y="'+(headerH-14)+'" width="'+colW+'" height="3" rx="1.5" fill="var('+b.colorVar+')"></rect>';
+  });
+  rows.forEach(function(r, ri){
+    var y = headerH + ri*(rowH+gap);
+    svg += '<text x="'+(labelW-10)+'" y="'+(y+rowH/2+4)+'" text-anchor="end" font-size="11.5" fill="var(--ink-2)">'+esc(r.term)+'</text>';
+    cb.forEach(function(b, bi){
+      var x = labelW + bi*(colW+gap);
+      var score = Number((r.scores||{})[b.name]) || 0;
+      var bin = termScoreBin(score);
+      svg += '<rect data-tip="'+esc(b.name)+' · “'+esc(r.term)+'”: '+Math.round(score)+'/100" x="'+(x+1)+'" y="'+(y+1)+'" width="'+(colW-2)+'" height="'+(rowH-2)+'" rx="4" fill="var(--seq-'+bin+')"></rect>'+
+        '<text x="'+(x+colW/2)+'" y="'+(y+rowH/2+4)+'" text-anchor="middle" font-size="11.5" fill="var(--seq-'+bin+'-ink)" style="pointer-events:none">'+Math.round(score)+'</text>';
+    });
+  });
+  var legendSteps = [1,2,3,4,5,6,7].map(function(i){ return '<span style="display:inline-block;width:18px;height:10px;background:var(--seq-'+i+')"></span>'; }).join("");
+  var legend = '<div style="display:flex;align-items:center;gap:6px;margin-top:10px;font-size:11.5px;color:var(--ink-2)">'+
+    '<span>Low</span><span style="display:flex;border-radius:3px;overflow:hidden">'+legendSteps+'</span><span>High</span>'+
+    '<span class="muted" style="margin-left:10px">association strength, 0–100'+(cb.some(function(b){return b.isTarget;})?' · * target':'')+'</span>'+
+  '</div>';
+  return '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block" role="img">'+svg+'</svg>'+legend;
+}
+async function runTermsAnalysis(){
+  if(!caps.sample || runningCalls.terms) return;
+  var cb = coloredBrands();
+  var lines = [];
+  cb.forEach(function(b){
+    var posts = state.posts.filter(function(p){return p.brandId===b.id;}).slice(0,40);
+    if(!posts.length) return;
+    lines.push("## "+b.name+(b.isTarget?" (TARGET)":""));
+    posts.forEach(function(p){ lines.push("- "+(p.caption||"")+" "+(p.hashtags||[]).join(" ")); });
+  });
+  if(!lines.length) return;
+  var brandNames = cb.map(function(b){return b.name;});
+  var prompt = 'Below are social captions/hashtags per brand: '+brandNames.join(", ")+'. Identify 8-16 recurring terms, phrases or themes/aspects (not generic words — things like specific benefits, features or value props) that distinguish these brands. '+
+    'For each term, score 0-100 how strongly EACH brand is associated with/owns it in its content (0 = never comes up for that brand, 100 = that brand dominates it). '+
+    'Reply with ONLY a JSON object: {"terms":[{"term":string,"scores":{'+brandNames.map(function(n){return JSON.stringify(n)+':number';}).join(",")+'}}],"summary":string}. '+
+    'Use exactly these brand names as the keys of "scores" for every term, in every term object. summary is 2-3 sentences on the overall pattern (who owns what, and the clearest gap).\n\n'+lines.join("\n");
+  runningCalls.terms = true; renderRoute();
+  try{
+    var data = await caps.sample.json(prompt, { modelTier:"default" });
+    await caps.db.collection("analysis").doc("terms").set({ module:"terms", resultJson: data, generatedAt: nowIso() });
+  }catch(e){}
+  finally{ delete runningCalls.terms; renderRoute(); }
+}
+
+/* =========================================================
+   SENTIMENT
+   ========================================================= */
+function renderSentiment(){
+  var cb = coloredBrands();
+  if(cb.length===0) return '<div class="empty">Add brands in Setup first.</div>';
+  var analysis = state.analysis.sentiment;
+  var running = !!runningCalls.sentiment;
+  var chart = "";
+  if(analysis && analysis.resultJson && analysis.resultJson.perBrand){
+    chart = buildSentimentBars(analysis.resultJson.perBrand, cb);
+  } else {
+    chart = '<div class="empty">'+(running?'Thinking…':'No analysis yet.')+'</div>';
+  }
+  var themes = "";
+  if(analysis && analysis.resultJson && analysis.resultJson.perBrand){
+    themes = analysis.resultJson.perBrand.map(function(pb){
+      return '<div style="margin-bottom:10px"><b>'+esc(pb.brandName)+'</b><div class="muted" style="font-size:12.5px">'+esc(pb.summary||"")+'</div></div>';
+    }).join("");
+  }
+  var commentRows = state.comments.slice().reverse().slice(0,200).map(function(c){
+    var brandChip = '<span class="chip"><span class="dot" style="background:var('+brandColorVar(c.brandId)+')"></span>'+esc(brandName(c.brandId))+'</span>';
+    if(editing.comment===c.id){
+      return '<tr><td>'+brandChip+'</td>'+
+        '<td><input type="text" id="editCommentInput" value="'+esc(c.text)+'" style="width:100%"></td>'+
+        '<td><button class="primary ghost" data-act="save-comment" data-id="'+c.id+'">Save</button> <button class="ghost" data-act="cancel-comment-edit">Cancel</button></td></tr>';
+    }
+    return '<tr><td>'+brandChip+'</td>'+
+      '<td class="muted" style="max-width:420px">'+esc(c.text)+'</td>'+
+      '<td><button class="ghost" data-act="edit-comment" data-id="'+c.id+'">Edit</button> <button class="danger ghost" data-act="del-comment" data-id="'+c.id+'">×</button></td></tr>';
+  }).join("") || '<tr><td colspan="3" class="empty">No comments logged yet</td></tr>';
+
+  return '<div class="panel">'+
+    '<div class="card">'+
+      '<h2>Sentiment distribution</h2>'+
+      '<div class="hint">Claude reads the logged comments per brand and scores the share of positive / neutral / negative sentiment, plus the themes behind it.</div>'+
+      '<div class="toolbar">'+
+        '<button class="primary" id="runSentiment" '+(running?'disabled':'')+'>'+(running?'Thinking…':(analysis?'Re-run analysis':'Run analysis'))+'</button>'+
+        (analysis ? '<span class="muted">Last run '+fmtDate(analysis.generatedAt)+'</span>' : '')+
+      '</div>'+
+      '<div style="margin-top:14px">'+chart+'</div>'+
+      '<div style="margin-top:14px">'+themes+'</div>'+
+    '</div>'+
+    '<div class="card">'+
+      '<h2>Log comments</h2>'+
+      '<div class="hint">Paste one comment per line for a brand/platform.</div>'+
+      '<div class="row">'+
+        '<div class="field"><label>Brand</label><select id="commentBrand" required>'+brandOptionsHtml()+'</select></div>'+
+        '<div class="field"><label>Platform</label><select id="commentPlatform">'+options(PLATFORMS)+'</select></div>'+
+      '</div>'+
+      '<textarea id="commentsText" placeholder="one comment per line…"></textarea>'+
+      '<button class="primary" id="addComments" style="margin-top:8px">Add comments</button>'+
+    '</div>'+
+    '<div class="card">'+
+      '<h2>Logged comments ('+state.comments.length+')</h2>'+
+      '<div class="tablewrap"><table><thead><tr><th>Brand</th><th>Comment</th><th></th></tr></thead><tbody>'+commentRows+'</tbody></table></div>'+
+    '</div>'+
+  '</div>';
+}
+function buildSentimentBars(perBrand, cb){
+  var W=680,H= Math.max(60, perBrand.length*48), rowH=40;
+  var padL=120, padR=16;
+  var plotW = W-padL-padR;
+  var svg="";
+  perBrand.forEach(function(pb,i){
+    var y = i*rowH+6;
+    var pos = Math.max(0,Number(pb.positivePct)||0), neu=Math.max(0,Number(pb.neutralPct)||0), neg=Math.max(0,Number(pb.negativePct)||0);
+    var total = pos+neu+neg || 1;
+    pos=pos/total*100; neu=neu/total*100; neg=neg/total*100;
+    var x = padL;
+    var segs = [["good",pos],["muted",neu],["critical",neg]];
+    var gap=2;
+    svg += '<text x="'+(padL-10)+'" y="'+(y+16)+'" text-anchor="end" font-size="12" fill="var(--ink-2)">'+esc(pb.brandName)+'</text>';
+    segs.forEach(function(s,si){
+      var w = (s[1]/100)*plotW - (si<2?gap:0);
+      if(w<=0) return;
+      var fill = s[0]==="good" ? "var(--good)" : s[0]==="critical" ? "var(--critical)" : "var(--border)";
+      var r = (si===0 && si===segs.length-1) ? 5 : 0;
+      var tl = si===0?5:0, bl=si===0?5:0, tr=0,br=0;
+      var isLast = si===2 || (s[0]==="critical");
+      svg += '<path data-tip="'+esc(pb.brandName)+' · '+s[0]+': '+s[1].toFixed(0)+'%" d="'+roundedSidePath(x,y,w,28,5, si===0, si===2)+'" fill="'+fill+'"></path>';
+      if(s[1]>=8){
+        svg += '<text x="'+(x+w/2)+'" y="'+(y+18)+'" text-anchor="middle" font-size="11" fill="#ffffff">'+s[1].toFixed(0)+'%</text>';
+      }
+      x += w+gap;
+    });
+  });
+  var legend = '<span><span class="dot" style="background:var(--good)"></span>Positive</span><span><span class="dot" style="background:var(--border)"></span>Neutral</span><span><span class="dot" style="background:var(--critical)"></span>Negative</span>';
+  return '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block" role="img">'+svg+'</svg><div class="legend">'+legend+'</div>';
+}
+function roundedSidePath(x,y,w,h,r,roundLeft,roundRight){
+  if(w<=0) return '';
+  var rl = roundLeft?Math.min(r,w/2):0, rr = roundRight?Math.min(r,w/2):0;
+  return 'M'+(x+rl)+','+y+' L'+(x+w-rr)+','+y+' '+(rr?('Q'+(x+w)+','+y+' '+(x+w)+','+(y+rr)+' '):'')+
+    'L'+(x+w)+','+(y+h-rr)+' '+(rr?('Q'+(x+w)+','+(y+h)+' '+(x+w-rr)+','+(y+h)+' '):'')+
+    'L'+(x+rl)+','+(y+h)+' '+(rl?('Q'+x+','+(y+h)+' '+x+','+(y+h-rl)+' '):'')+
+    'L'+x+','+(y+rl)+' '+(rl?('Q'+x+','+y+' '+(x+rl)+','+y+' '):'')+'Z';
+}
+function wireSentiment(){
+  var add = qs("#addComments");
+  if(add) add.addEventListener("click", async function(){
+    var brandId = qs("#commentBrand").value; if(!brandId) return;
+    var platform = qs("#commentPlatform").value;
+    var lines = qs("#commentsText").value.split("\n").map(function(s){return s.trim();}).filter(Boolean);
+    for(var i=0;i<lines.length;i++){
+      await caps.db.collection("postComments").add({ brandId:brandId, platform:platform, text: lines[i], createdAt: nowIso() });
+    }
+    qs("#commentsText").value="";
+  });
+  var run = qs("#runSentiment");
+  if(run) run.addEventListener("click", runSentimentAnalysis);
+}
+async function runSentimentAnalysis(){
+  if(!caps.sample || runningCalls.sentiment) return;
+  var cb = coloredBrands();
+  var lines = [];
+  cb.forEach(function(b){
+    var list = state.comments.filter(function(c){return c.brandId===b.id;}).slice(0,60);
+    if(!list.length) return;
+    lines.push("## "+b.name+" (id:"+b.id+")");
+    list.forEach(function(c){ lines.push("- "+c.text); });
+  });
+  if(!lines.length) return;
+  var prompt = 'Below are comments per brand. For each brand estimate the percentage split of positive/neutral/negative sentiment (must sum to ~100) and summarize the 2-3 themes driving that sentiment in one sentence. '+
+    'Reply with ONLY JSON: {"perBrand":[{"brandId":string,"brandName":string,"positivePct":number,"neutralPct":number,"negativePct":number,"summary":string}]}\n\n'+lines.join("\n");
+  runningCalls.sentiment = true; renderRoute();
+  try{
+    var data = await caps.sample.json(prompt, { modelTier:"default" });
+    await caps.db.collection("analysis").doc("sentiment").set({ module:"sentiment", resultJson:data, generatedAt: nowIso() });
+    var scores = {};
+    (data.perBrand||[]).forEach(function(pb){ scores[pb.brandId] = (Number(pb.positivePct)||0) - (Number(pb.negativePct)||0); });
+    await pushSnapshot("sentiment", scores);
+  }catch(e){}
+  finally{ delete runningCalls.sentiment; renderRoute(); }
+}
+
+/* =========================================================
+   ADS
+   ========================================================= */
+function renderAds(){
+  var cb = coloredBrands();
+  if(cb.length===0) return '<div class="empty">Add brands in Setup first.</div>';
+  var analysis = state.analysis.ads;
+  var running = !!runningCalls.ads;
+  var rows = state.ads.slice().reverse().map(function(a){
+    return '<tr><td><span class="chip"><span class="dot" style="background:var('+brandColorVar(a.brandId)+')"></span>'+esc(brandName(a.brandId))+'</span></td>'+
+      '<td>'+esc(a.platform)+'</td><td class="muted" style="max-width:260px">'+esc(a.adCopy)+'</td><td>'+esc(a.offer||"")+'</td><td>'+esc(a.format||"")+'</td>'+
+      (a.screenshotAssetId ? '<td><img src="/_blob/'+a.screenshotAssetId+'" style="width:60px;height:44px;object-fit:cover;border-radius:5px"></td>' : '<td>—</td>')+
+      '<td><button class="ghost" data-act="edit-ad" data-id="'+a.id+'">Edit</button> <button class="danger ghost" data-act="del-ad" data-id="'+a.id+'">×</button></td></tr>';
+  }).join("") || '<tr><td colspan="7" class="empty">No ads logged yet</td></tr>';
+  var editRec = editing.ad ? state.ads.filter(function(a){return a.id===editing.ad;})[0] : null;
+
+  return '<div class="panel">'+
+    '<div class="card">'+
+      '<h2>Paid ads</h2>'+
+      '<div class="hint">Pull examples from the free public ad libraries — <a href="https://www.facebook.com/ads/library/" target="_blank">Meta Ad Library</a>, '+
+      '<a href="https://ads.tiktok.com/business/creativecenter/" target="_blank">TikTok Creative Center</a>, '+
+      '<a href="https://adstransparency.google.com/" target="_blank">Google Ads Transparency Center</a>, '+
+      '<a href="https://www.linkedin.com/ad-library/" target="_blank">LinkedIn Ad Library</a> — then log the copy here.</div>'+
+      '<div class="toolbar">'+
+        '<button class="primary" id="runAds" '+(running?'disabled':'')+'>'+(running?'Thinking…':(analysis?'Re-run analysis':'Run analysis'))+'</button>'+
+        (analysis ? '<span class="muted">Last run '+fmtDate(analysis.generatedAt)+'</span>' : '')+
+      '</div>'+
+      '<div class="analysis-out" id="adsOut" style="margin-top:12px">'+(analysis ? esc(analysis.resultText) : '<span class="muted">No analysis yet.</span>')+'</div>'+
+    '</div>'+
+    '<div class="card">'+
+      '<h2>'+(editRec?'Edit ad':'Log an ad')+'</h2>'+
+      '<form id="adForm" class="row">'+
+        '<div class="field"><label>Brand</label><select required name="brandId">'+brandOptionsHtml(editRec?editRec.brandId:null)+'</select></div>'+
+        '<div class="field"><label>Platform</label><select name="platform">'+options(ADS_PLATFORMS, editRec?editRec.platform:null)+'</select></div>'+
+        '<div class="field"><label>Format</label><input name="format" placeholder="video / carousel / static" value="'+(editRec?esc(editRec.format||""):"")+'"></div>'+
+        '<div class="field"><label>Offer</label><input name="offer" placeholder="e.g. 20% off" value="'+(editRec?esc(editRec.offer||""):"")+'"></div>'+
+        '<div class="field" style="flex:1 1 300px"><label>Ad copy</label><textarea name="adCopy" placeholder="paste headline + body text">'+(editRec?esc(editRec.adCopy||""):"")+'</textarea></div>'+
+        '<div class="field"><label>Screenshot '+(editRec&&editRec.screenshotAssetId?'(replace, optional)':'(optional)')+'</label><input type="file" name="screenshot" accept="image/*"></div>'+
+        '<button class="primary" type="submit">'+(editRec?'Save changes':'Add ad')+'</button>'+
+        (editRec?' <button type="button" class="ghost" data-act="cancel-ad-edit">Cancel</button>':'')+
+      '</form>'+
+    '</div>'+
+    '<div class="card">'+
+      '<h2>Logged ads ('+state.ads.length+')</h2>'+
+      '<div class="tablewrap"><table><thead><tr><th>Brand</th><th>Platform</th><th>Copy</th><th>Offer</th><th>Format</th><th>Shot</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
+    '</div>'+
+  '</div>';
+}
+function wireAds(){
+  var f = qs("#adForm");
+  if(f) f.addEventListener("submit", async function(e){
+    e.preventDefault();
+    var fd = new FormData(f);
+    var prevRec = editing.ad ? state.ads.filter(function(a){return a.id===editing.ad;})[0] : null;
+    var assetId = prevRec ? (prevRec.screenshotAssetId||null) : null;
+    var file = fd.get("screenshot");
+    if(file && file.size>0 && caps.assets){
+      try{ var up = await caps.assets.upload(file); assetId = up.id; }catch(err){}
+    }
+    var data = {
+      brandId: fd.get("brandId"), platform: fd.get("platform"), format: fd.get("format")||"",
+      offer: fd.get("offer")||"", adCopy: fd.get("adCopy")||"", screenshotAssetId: assetId
+    };
+    if(editing.ad){
+      await caps.db.collection("ads").doc(editing.ad).update(data);
+      editing.ad = null;
+    } else {
+      data.createdAt = nowIso();
+      await caps.db.collection("ads").add(data);
+    }
+    f.reset();
+  });
+  var run = qs("#runAds");
+  if(run) run.addEventListener("click", runAdsAnalysis);
+}
+async function runAdsAnalysis(){
+  if(!caps.sample || runningCalls.ads) return;
+  var cb = coloredBrands();
+  var lines = [];
+  cb.forEach(function(b){
+    var list = state.ads.filter(function(a){return a.brandId===b.id;}).slice(0,20);
+    if(!list.length) return;
+    lines.push("## "+b.name+(b.isTarget?" (TARGET)":""));
+    list.forEach(function(a){ lines.push("- ["+a.platform+"/"+a.format+"] offer="+(a.offer||"none")+' copy="'+a.adCopy+'"'); });
+  });
+  if(!lines.length) return;
+  var prompt = "Below is paid ad creative/copy logged per brand. Write a concise plain-text analysis (short paragraphs, dashes for lists, no markdown headers) covering: "+
+    "1) the messaging themes, hooks and offer types each brand leans on; 2) how the target brand's ad approach differs from competitors; 3) two concrete ad-angle recommendations for the target brand, focused on reaching and converting business buyers/decision-makers (B2B), not individual consumers unless that angle clearly helps B2B pipeline.\n\n"+lines.join("\n");
+  runningCalls.ads = true; renderRoute();
+  try{
+    var out = qs("#adsOut");
+    var res = await caps.sample(prompt, { modelTier:"default", onText: function(u){ if(out) out.textContent=u.text; } });
+    await caps.db.collection("analysis").doc("ads").set({ module:"ads", resultText: res.text, generatedAt: nowIso() });
+  }catch(e){}
+  finally{ delete runningCalls.ads; renderRoute(); }
+}
+
+/* =========================================================
+   VISUAL STYLE
+   ========================================================= */
+function brandVisualScreenshots(brandId){
+  var shots = [];
+  state.posts.filter(function(p){return p.brandId===brandId;}).forEach(function(p){
+    (p.screenshotAssetIds||[]).forEach(function(id){ shots.push({assetId:id, platform:p.platform, postedAt:p.postedAt||"", source:"post"}); });
+  });
+  state.ads.filter(function(a){return a.brandId===brandId;}).forEach(function(a){
+    if(a.screenshotAssetId) shots.push({assetId:a.screenshotAssetId, platform:a.platform, postedAt:(a.createdAt||"").slice(0,10), source:"ad"});
+  });
+  return shots.sort(function(a,c){ return c.postedAt.localeCompare(a.postedAt); });
+}
+function sampleErrorMessage(code){
+  var map = {
+    not_granted: "You haven't allowed this artifact to use Claude yet — click the button again and allow it when asked.",
+    sampling_disabled: "Claude isn't available for this account right now.",
+    images_unavailable: "This view can't send images to Claude.",
+    image_rejected: "One of the screenshots couldn't be sent — wrong file type or too large.",
+    rate_limited: "Too many requests right now — try again shortly.",
+    session_expired: "Your session expired — refresh the page and try again.",
+    refused: "Claude declined to analyze these images.",
+    empty_completion: "Claude didn't return anything that time — try again.",
+    upstream_error: "A temporary service error — try again.",
+    no_images: "Couldn't load any of the screenshots to send.",
+    capability_disabled: "Image analysis isn't enabled for this view.",
+    capability_removed: "This feature isn't available in this view.",
+    prompt_too_large: "Too much data to send at once."
+  };
+  return map[code] || ("Couldn't finish: "+code);
+}
+async function collectValidImageBlobs(imgs, labelFn){
+  var limits = await caps.sample.limits().catch(function(){ return null; });
+  var okTypes = limits && limits.images ? limits.images.mediaTypes : ["image/jpeg","image/png","image/webp","image/gif"];
+  var maxBytes = limits && limits.images ? limits.images.maxInputBytes : Infinity;
+  var maxCount = limits && limits.images ? limits.images.maxCount : 6;
+  var blobs = [], labels = [], skipped = 0;
+  for(var i=0;i<imgs.length && blobs.length<maxCount;i++){
+    try{
+      var resp = await fetch("/_blob/"+imgs[i].assetId);
+      var blob = await resp.blob();
+      if(okTypes.indexOf(blob.type)===-1 || blob.size>maxBytes){ skipped++; continue; }
+      blobs.push(blob);
+      labels.push(labelFn(imgs[i], blobs.length));
+    }catch(e){ skipped++; }
+  }
+  return { blobs: blobs, labels: labels, skipped: skipped };
+}
+function renderVisual(){
+  var cb = coloredBrands();
+  if(cb.length===0) return '<div class="empty">Add brands in Setup first.</div>';
+  var sections = cb.map(function(b){
+    var imgs = brandVisualScreenshots(b.id);
+    var key = "visual_"+b.id;
+    var a = state.analysis[key];
+    var running = !!runningCalls[key];
+    var err = imageAnalysisErrors[key];
+    var imgHtml = imgs.map(function(v){
+      return '<div class="imgcard"><img src="/_blob/'+v.assetId+'" alt=""><div class="capt">'+esc(v.platform)+(v.source==="ad"?' · ad':'')+'</div></div>';
+    }).join("") || '<div class="muted" style="font-size:12.5px">No screenshots yet — add post screenshots in Engagement or ad screenshots in Paid Ads.</div>';
+    var out = a ? esc(a.resultText)+(a.skippedCount ? '<div class="muted" style="font-size:12px;margin-top:8px">'+a.skippedCount+' screenshot(s) skipped — unsupported format or too large.</div>' : '') : (err ? '<span style="color:var(--critical)">'+esc(sampleErrorMessage(err))+'</span>' : '<span class="muted">'+(imgs.length?'No analysis yet.':'Log posts or ads with screenshots first.')+'</span>');
+    return '<div class="card">'+
+      '<h2><span class="dot" style="background:var('+b.colorVar+')"></span> '+esc(b.name)+(b.isTarget?' <span class="chip">Target</span>':'')+'</h2>'+
+      '<div class="imgrow" style="margin:10px 0">'+imgHtml+'</div>'+
+      '<div class="toolbar" style="margin-top:12px">'+
+        '<button class="primary runVisual" data-brand="'+b.id+'" '+((running||imgs.length===0)?'disabled':'')+'>'+(running?'Thinking…':(a?'Re-run analysis':'Analyze visual style'))+'</button>'+
+        (a ? '<span class="muted">Last run '+fmtDate(a.generatedAt)+'</span>' : '')+
+      '</div>'+
+      '<div class="analysis-out" style="margin-top:10px">'+out+'</div>'+
+    '</div>';
+  }).join("");
+  return '<div class="panel">'+
+    '<div class="card"><h2>Visual &amp; creative style</h2><div class="hint" style="margin-bottom:0">Uses the post screenshots from Engagement and the ad screenshots from Paid Ads. Claude looks at the most recent ones per brand and assesses color palette, photography vs. illustration style, and visual consistency — organic vs. paid.</div></div>'+
+    sections+
+  '</div>';
+}
+function wireVisual(){
+  qsa(".runVisual").forEach(function(btn){
+    btn.addEventListener("click", function(){ runVisualAnalysis(btn.getAttribute("data-brand")); });
+  });
+}
+async function runVisualAnalysis(brandId){
+  if(!caps.sample) return;
+  var key = "visual_"+brandId;
+  if(runningCalls[key]) return;
+  var imgs = brandVisualScreenshots(brandId).slice(0,6);
+  if(!imgs.length) return;
+  delete imageAnalysisErrors[key];
+  runningCalls[key] = true; renderRoute();
+  try{
+    var r = await collectValidImageBlobs(imgs, function(img, n){ return "Image "+n+": "+img.platform+(img.source==="ad"?" paid ad":" organic post"); });
+    if(!r.blobs.length) throw {code: r.skipped ? "image_rejected" : "no_images"};
+    var prompt = "These are real screenshots from one brand's social accounts, a mix of organic posts and paid ad creative, in this order:\n"+r.labels.join("\n")+
+      "\n\nAssess visual/creative style in plain text (short paragraphs, no markdown headers): "+
+      "dominant color palette, photography vs. illustration vs. text-driven graphics, subject focus (product vs. people vs. lifestyle), how visually consistent the brand is across posts, and whether the paid ad creative looks different from the organic posts. End with one suggestion aimed at the B2B/business-buyer audience, not individual consumers.";
+    var res = await caps.sample(prompt, { modelTier:"default", images: r.blobs });
+    await caps.db.collection("analysis").doc(key).set({ module:key, resultText: res.text, generatedAt: nowIso(), skippedCount: r.skipped });
+  }catch(e){ imageAnalysisErrors[key] = (e && e.code) || "unknown_error"; }
+  finally{ delete runningCalls[key]; renderRoute(); }
+}
+
+/* =========================================================
+   REVIEW SITES (G2 / Capterra / TrustRadius)
+   ========================================================= */
+function reviewListingDocId(brandId, site){ return brandId+"__"+site.replace(/\s+/g,"_"); }
+function brandReviewScreenshots(brandId){
+  return state.reviewScreenshots.filter(function(s){return s.brandId===brandId;})
+    .slice().sort(function(a,c){return (c.createdAt||"").localeCompare(a.createdAt||"");});
+}
+function renderReviews(){
+  var cb = coloredBrands();
+  if(cb.length===0) return '<div class="empty">Add brands in Setup first.</div>';
+
+  var rows = state.reviewListings.slice().sort(function(a,c){return esc(a.brandId).localeCompare(c.brandId);}).map(function(l){
+    return '<tr><td><span class="chip"><span class="dot" style="background:var('+brandColorVar(l.brandId)+')"></span>'+esc(brandName(l.brandId))+'</span></td>'+
+      '<td>'+esc(l.site)+'</td>'+
+      '<td class="tnum">'+(l.rating!=null && l.rating!=="" ? Number(l.rating).toFixed(1) : "\u2014")+'</td>'+
+      '<td class="tnum">'+fmtNum(l.reviewCount)+'</td>'+
+      '<td class="muted">'+esc(l.category||"")+'</td>'+
+      '<td class="muted" style="max-width:220px">'+esc(l.positioning||"")+'</td>'+
+      '<td><button class="ghost" data-act="edit-reviewlisting" data-id="'+l.id+'">Edit</button> <button class="danger ghost" data-act="del-reviewlisting" data-id="'+l.id+'">\u00d7</button></td></tr>';
+  }).join("") || '<tr><td colspan="7" class="empty">No review-site listings logged yet</td></tr>';
+
+  var editRec = editing.reviewListing ? state.reviewListings.filter(function(l){return l.id===editing.reviewListing;})[0] : null;
+
+  var thAnalysis = state.analysis.reviewThemes;
+  var thRunning = !!runningCalls.reviewThemes;
+  var thTerms = thAnalysis && thAnalysis.resultJson && thAnalysis.resultJson.terms;
+  var thStale = thTerms && thTerms.length && !thTerms[0].scores;
+  var thBody;
+  if(thStale){
+    thBody = '<div class="empty">This analysis was run before the chart view \u2014 click Re-run analysis.</div>';
+  } else if(thTerms && thTerms.length){
+    thBody = buildTermsHeatmap(thTerms, cb);
+    if(thAnalysis.resultJson.summary) thBody += '<div class="analysis-out" style="margin-top:14px">'+esc(thAnalysis.resultJson.summary)+'</div>';
+  } else if(thRunning){
+    thBody = '<div class="muted">Thinking\u2026</div>';
+  } else {
+    thBody = '<div class="empty">No analysis yet.</div>';
+  }
+
+  var visualSections = cb.map(function(b){
+    var imgs = brandReviewScreenshots(b.id);
+    var key = "reviewVisual_"+b.id;
+    var a = state.analysis[key];
+    var running = !!runningCalls[key];
+    var err = imageAnalysisErrors[key];
+    var imgHtml = imgs.map(function(v){
+      return '<div class="imgcard" style="position:relative"><img src="/_blob/'+v.assetId+'" alt=""><div class="capt">'+esc(v.site)+'</div><button class="danger ghost" data-act="del-reviewshot" data-id="'+v.id+'" style="position:absolute;top:2px;right:2px;padding:1px 6px">\u00d7</button></div>';
+    }).join("") || '<div class="muted" style="font-size:12.5px">No screenshots uploaded yet.</div>';
+    var out = a ? esc(a.resultText)+(a.skippedCount ? '<div class="muted" style="font-size:12px;margin-top:8px">'+a.skippedCount+' screenshot(s) skipped \u2014 unsupported format or too large.</div>' : '') : (err ? '<span style="color:var(--critical)">'+esc(sampleErrorMessage(err))+'</span>' : '<span class="muted">'+(imgs.length?'No analysis yet.':'Upload screenshots first.')+'</span>');
+    return '<div class="card">'+
+      '<h2><span class="dot" style="background:var('+b.colorVar+')"></span> '+esc(b.name)+(b.isTarget?' <span class="chip">Target</span>':'')+'</h2>'+
+      '<div class="imgrow" style="margin:10px 0">'+imgHtml+'</div>'+
+      '<div class="row">'+
+        '<div class="field"><label>Site</label><select class="reviewShotSite">'+options(REVIEW_SITES)+'</select></div>'+
+        '<div class="field"><label>Screenshot</label><input type="file" class="reviewShotFile" accept="image/*"></div>'+
+        '<button class="ghost uploadReviewShot" data-brand="'+b.id+'">Upload</button>'+
+      '</div>'+
+      '<div class="toolbar" style="margin-top:12px">'+
+        '<button class="primary runReviewVisual" data-brand="'+b.id+'" '+((running||imgs.length===0)?'disabled':'')+'>'+(running?'Thinking\u2026':(a?'Re-run analysis':'Analyze visual style'))+'</button>'+
+        (a ? '<span class="muted">Last run '+fmtDate(a.generatedAt)+'</span>' : '')+
+      '</div>'+
+      '<div class="analysis-out" style="margin-top:10px">'+out+'</div>'+
+    '</div>';
+  }).join("");
+
+  return '<div class="panel">'+
+    '<div class="card">'+
+      '<h2>Review site listings</h2>'+
+      '<div class="hint">Visit each brand\u2019s G2/Capterra/TrustRadius profile and log the basics \u2014 rating, review count, and the positioning/themes it\'s known for.</div>'+
+      '<div class="tablewrap"><table><thead><tr><th>Brand</th><th>Site</th><th>Rating</th><th>Reviews</th><th>Category</th><th>Positioning</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
+    '</div>'+
+    '<div class="card">'+
+      '<h2>'+(editRec?'Edit listing':'Log a listing')+'</h2>'+
+      '<form id="reviewListingForm" class="row">'+
+        '<div class="field"><label>Brand</label><select required name="brandId">'+brandOptionsHtml(editRec?editRec.brandId:null)+'</select></div>'+
+        '<div class="field"><label>Site</label><select name="site">'+options(REVIEW_SITES, editRec?editRec.site:null)+'</select></div>'+
+        '<div class="field"><label>Rating</label><input name="rating" type="number" min="0" max="5" step="0.1" placeholder="4.6" value="'+(editRec&&editRec.rating!=null?esc(editRec.rating):"")+'"></div>'+
+        '<div class="field"><label>Review count</label><input name="reviewCount" type="number" min="0" placeholder="450" value="'+(editRec?Number(editRec.reviewCount)||0:'')+'"></div>'+
+        '<div class="field"><label>Category</label><input name="category" placeholder="e.g. IoT Platforms" value="'+(editRec?esc(editRec.category||""):"")+'"></div>'+
+        '<div class="field" style="flex:1 1 220px"><label>Positioning (tagline on the listing)</label><input name="positioning" placeholder="one-line positioning statement" value="'+(editRec?esc(editRec.positioning||""):"")+'"></div>'+
+        '<div class="field" style="flex:1 1 220px"><label>Ideal for</label><input name="idealFor" placeholder="target customer segment per the listing" value="'+(editRec?esc(editRec.idealFor||""):"")+'"></div>'+
+        '<div class="field" style="flex:1 1 220px"><label>Themes (comma-separated)</label><input name="themes" placeholder="ease of use, support, integrations" value="'+(editRec?esc((editRec.themes||[]).join(", ")):"")+'"></div>'+
+        '<div class="field" style="flex:1 1 100%"><label>Representative review excerpts</label><textarea name="excerpts" placeholder="paste a few pros/cons quotes from real reviews">'+(editRec?esc(editRec.excerpts||""):"")+'</textarea></div>'+
+        '<button class="primary" type="submit">'+(editRec?'Save changes':'Save')+'</button>'+
+        (editRec?' <button type="button" class="ghost" data-act="cancel-reviewlisting-edit">Cancel</button>':'')+
+      '</form>'+
+    '</div>'+
+    '<div class="card">'+
+      '<h2>Review theme ownership</h2>'+
+      '<div class="hint">Claude reads each brand\'s logged positioning/ideal-for/themes/excerpts and scores how strongly each brand owns each recurring theme in customer perception \u2014 same reading as the Terms tab, for review sites.</div>'+
+      '<div class="toolbar">'+
+        '<button class="primary" id="runReviewThemes" '+(thRunning?'disabled':'')+'>'+(thRunning?'Thinking\u2026':(thAnalysis?'Re-run analysis':'Run analysis'))+'</button>'+
+        (thAnalysis ? '<span class="muted">Last run '+fmtDate(thAnalysis.generatedAt)+'</span>' : '')+
+      '</div>'+
+      '<div style="margin-top:12px">'+thBody+'</div>'+
+    '</div>'+
+    '<div class="card"><h2>Review site screenshots &amp; visual style</h2><div class="hint" style="margin-bottom:0">Upload screenshots of each brand\'s review-site profile \u2014 badge grids, score cards, review highlight graphics. Claude assesses color palette, how proof points are presented, and visual consistency.</div></div>'+
+    visualSections+
+  '</div>';
+}
+function wireReviews(){
+  var f = qs("#reviewListingForm");
+  if(f) f.addEventListener("submit", async function(e){
+    e.preventDefault();
+    var fd = new FormData(f);
+    var brandId = fd.get("brandId"); if(!brandId) return;
+    var site = fd.get("site");
+    var docId = reviewListingDocId(brandId, site);
+    var prevId = editing.reviewListing ? reviewListingDocId(
+      state.reviewListings.filter(function(l){return l.id===editing.reviewListing;})[0].brandId,
+      state.reviewListings.filter(function(l){return l.id===editing.reviewListing;})[0].site
+    ) : null;
+    await caps.db.collection("reviewListings").doc(docId).set({
+      brandId: brandId, site: site,
+      rating: fd.get("rating")!=="" ? Number(fd.get("rating")) : null,
+      reviewCount: Number(fd.get("reviewCount"))||0,
+      category: fd.get("category")||"",
+      positioning: fd.get("positioning")||"",
+      idealFor: fd.get("idealFor")||"",
+      themes: (fd.get("themes")||"").split(",").map(function(s){return s.trim();}).filter(Boolean),
+      excerpts: fd.get("excerpts")||"",
+      updatedAt: nowIso()
+    });
+    if(prevId && prevId!==docId){ await caps.db.collection("reviewListings").doc(prevId).delete(); }
+    editing.reviewListing = null;
+    f.reset();
+  });
+  qsa(".uploadReviewShot").forEach(function(btn){
+    btn.addEventListener("click", async function(){
+      var brandId = btn.getAttribute("data-brand");
+      var card = btn.closest(".card");
+      var file = card.querySelector(".reviewShotFile").files[0];
+      var site = card.querySelector(".reviewShotSite").value;
+      if(!file || !caps.assets) return;
+      btn.disabled = true;
+      try{
+        var up = await caps.assets.upload(file);
+        await caps.db.collection("reviewScreenshots").add({ brandId:brandId, site:site, assetId: up.id, createdAt: nowIso() });
+      }catch(e){}
+      btn.disabled = false;
+    });
+  });
+  qsa(".runReviewVisual").forEach(function(btn){
+    btn.addEventListener("click", function(){ runReviewVisualAnalysis(btn.getAttribute("data-brand")); });
+  });
+  var run = qs("#runReviewThemes");
+  if(run) run.addEventListener("click", runReviewThemesAnalysis);
+}
+async function runReviewThemesAnalysis(){
+  if(!caps.sample || runningCalls.reviewThemes) return;
+  var cb = coloredBrands();
+  var lines = [];
+  cb.forEach(function(b){
+    var listings = state.reviewListings.filter(function(l){return l.brandId===b.id;});
+    if(!listings.length) return;
+    lines.push("## "+b.name+(b.isTarget?" (TARGET)":""));
+    listings.forEach(function(l){
+      lines.push("["+l.site+"] positioning=\""+(l.positioning||"")+"\" idealFor=\""+(l.idealFor||"")+"\" themes="+(l.themes||[]).join(" ")+" excerpts=\""+(l.excerpts||"").slice(0,400)+"\"");
+    });
+  });
+  if(!lines.length) return;
+  var brandNames = cb.map(function(b){return b.name;});
+  var prompt = 'Below are review-site listing text (positioning tagline, ideal-customer description, recurring themes field, representative review excerpts) per brand: '+brandNames.join(", ")+'. Identify 8-16 recurring themes/phrases (not generic words \u2014 specific features, strengths or differentiation points customers call out) that distinguish these brands. '+
+    'For each theme, score 0-100 how strongly EACH brand owns it in customer perception (0 = never comes up for that brand, 100 = that brand dominates it). '+
+    'Reply with ONLY a JSON object: {"terms":[{"term":string,"scores":{'+brandNames.map(function(n){return JSON.stringify(n)+':number';}).join(",")+'}}],"summary":string}. '+
+    'Use exactly these brand names as the keys of "scores" for every term, in every term object. summary is 2-3 sentences on the overall pattern (who owns what theme, and the clearest perception gap).\n\n'+lines.join("\n");
+  runningCalls.reviewThemes = true; renderRoute();
+  try{
+    var data = await caps.sample.json(prompt, { modelTier:"default" });
+    await caps.db.collection("analysis").doc("reviewThemes").set({ module:"reviewThemes", resultJson: data, generatedAt: nowIso() });
+  }catch(e){}
+  finally{ delete runningCalls.reviewThemes; renderRoute(); }
+}
+async function runReviewVisualAnalysis(brandId){
+  if(!caps.sample) return;
+  var key = "reviewVisual_"+brandId;
+  if(runningCalls[key]) return;
+  var imgs = brandReviewScreenshots(brandId).slice(0,6);
+  if(!imgs.length) return;
+  delete imageAnalysisErrors[key];
+  runningCalls[key] = true; renderRoute();
+  try{
+    var r = await collectValidImageBlobs(imgs, function(img, n){ return "Image "+n+": "+img.site+" review profile screenshot"; });
+    if(!r.blobs.length) throw {code: r.skipped ? "image_rejected" : "no_images"};
+    var prompt = "These are real screenshots from one brand's review-site profile (badges, score cards, review highlights), in this order:\n"+r.labels.join("\n")+
+      "\n\nAssess visual/creative style in plain text (short paragraphs, no markdown headers): "+
+      "dominant color palette, how proof points and badges are presented, subject focus (product UI vs. customer quotes vs. abstract graphics), and how visually consistent the profile is. End with one suggestion aimed at the B2B/business-buyer audience, not individual consumers.";
+    var res = await caps.sample(prompt, { modelTier:"default", images: r.blobs });
+    await caps.db.collection("analysis").doc(key).set({ module:key, resultText: res.text, generatedAt: nowIso(), skippedCount: r.skipped });
+  }catch(e){ imageAnalysisErrors[key] = (e && e.code) || "unknown_error"; }
+  finally{ delete runningCalls[key]; renderRoute(); }
+}
+
+/* =========================================================
+   APP STORE
+   ========================================================= */
+function appListingDocId(brandId, store){ return brandId+"__"+store.replace(/\s+/g,"_"); }
+function brandAppScreenshots(brandId){
+  return state.appScreenshots.filter(function(s){return s.brandId===brandId;})
+    .slice().sort(function(a,c){return (c.createdAt||"").localeCompare(a.createdAt||"");});
+}
+function renderAppStore(){
+  var cb = coloredBrands();
+  if(cb.length===0) return '<div class="empty">Add brands in Setup first.</div>';
+
+  var rows = state.appListings.slice().sort(function(a,c){return esc(a.brandId).localeCompare(c.brandId);}).map(function(l){
+    return '<tr><td><span class="chip"><span class="dot" style="background:var('+brandColorVar(l.brandId)+')"></span>'+esc(brandName(l.brandId))+'</span></td>'+
+      '<td>'+esc(l.store)+'</td>'+
+      '<td class="tnum">'+(l.rating!=null && l.rating!=="" ? Number(l.rating).toFixed(1) : "—")+'</td>'+
+      '<td class="tnum">'+fmtNum(l.ratingCount)+'</td>'+
+      '<td class="tnum">'+(l.downloads ? fmtNum(l.downloads)+"+" : "—")+'</td>'+
+      '<td class="muted">'+esc(l.category||"")+'</td>'+
+      '<td class="muted" style="max-width:220px">'+esc(l.title||"")+'</td>'+
+      '<td><button class="ghost" data-act="edit-applisting" data-id="'+l.id+'">Edit</button> <button class="danger ghost" data-act="del-applisting" data-id="'+l.id+'">×</button></td></tr>';
+  }).join("") || '<tr><td colspan="8" class="empty">No app listings logged yet</td></tr>';
+
+  var editRec = editing.appListing ? state.appListings.filter(function(l){return l.id===editing.appListing;})[0] : null;
+
+  var kwAnalysis = state.analysis.appKeywords;
+  var kwRunning = !!runningCalls.appKeywords;
+  var kwTerms = kwAnalysis && kwAnalysis.resultJson && kwAnalysis.resultJson.terms;
+  var kwStale = kwTerms && kwTerms.length && !kwTerms[0].scores;
+  var kwBody;
+  if(kwStale){
+    kwBody = '<div class="empty">This analysis was run before the chart view — click Re-run analysis.</div>';
+  } else if(kwTerms && kwTerms.length){
+    kwBody = buildTermsHeatmap(kwTerms, cb);
+    if(kwAnalysis.resultJson.summary) kwBody += '<div class="analysis-out" style="margin-top:14px">'+esc(kwAnalysis.resultJson.summary)+'</div>';
+  } else if(kwRunning){
+    kwBody = '<div class="muted">Thinking…</div>';
+  } else {
+    kwBody = '<div class="empty">No analysis yet.</div>';
+  }
+
+  var visualSections = cb.map(function(b){
+    var imgs = brandAppScreenshots(b.id);
+    var key = "appVisual_"+b.id;
+    var a = state.analysis[key];
+    var running = !!runningCalls[key];
+    var err = imageAnalysisErrors[key];
+    var imgHtml = imgs.map(function(v){
+      return '<div class="imgcard" style="position:relative"><img src="/_blob/'+v.assetId+'" alt=""><div class="capt">'+esc(v.store)+'</div><button class="danger ghost" data-act="del-appshot" data-id="'+v.id+'" style="position:absolute;top:2px;right:2px;padding:1px 6px">×</button></div>';
+    }).join("") || '<div class="muted" style="font-size:12.5px">No screenshots uploaded yet.</div>';
+    var out = a ? esc(a.resultText)+(a.skippedCount ? '<div class="muted" style="font-size:12px;margin-top:8px">'+a.skippedCount+' screenshot(s) skipped — unsupported format or too large.</div>' : '') : (err ? '<span style="color:var(--critical)">'+esc(sampleErrorMessage(err))+'</span>' : '<span class="muted">'+(imgs.length?'No analysis yet.':'Upload screenshots first.')+'</span>');
+    return '<div class="card">'+
+      '<h2><span class="dot" style="background:var('+b.colorVar+')"></span> '+esc(b.name)+(b.isTarget?' <span class="chip">Target</span>':'')+'</h2>'+
+      '<div class="imgrow" style="margin:10px 0">'+imgHtml+'</div>'+
+      '<div class="row">'+
+        '<div class="field"><label>Store</label><select class="appShotStore">'+options(STORES)+'</select></div>'+
+        '<div class="field"><label>Screenshot</label><input type="file" class="appShotFile" accept="image/*"></div>'+
+        '<button class="ghost uploadAppShot" data-brand="'+b.id+'">Upload</button>'+
+      '</div>'+
+      '<div class="toolbar" style="margin-top:12px">'+
+        '<button class="primary runAppVisual" data-brand="'+b.id+'" '+((running||imgs.length===0)?'disabled':'')+'>'+(running?'Thinking…':(a?'Re-run analysis':'Analyze visual style'))+'</button>'+
+        (a ? '<span class="muted">Last run '+fmtDate(a.generatedAt)+'</span>' : '')+
+      '</div>'+
+      '<div class="analysis-out" style="margin-top:10px">'+out+'</div>'+
+    '</div>';
+  }).join("");
+
+  return '<div class="panel">'+
+    '<div class="card">'+
+      '<h2>App store listings</h2>'+
+      '<div class="hint">Visit each brand’s App Store and Google Play listing and log the basics — rating, review count, and the listing text (title/subtitle/keywords/description) it\'s optimized around.</div>'+
+      '<div class="tablewrap"><table><thead><tr><th>Brand</th><th>Store</th><th>Rating</th><th>Reviews</th><th>Downloads</th><th>Category</th><th>Title</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
+    '</div>'+
+    '<div class="card">'+
+      '<h2>'+(editRec?'Edit listing':'Log a listing')+'</h2>'+
+      '<form id="appListingForm" class="row">'+
+        '<div class="field"><label>Brand</label><select required name="brandId">'+brandOptionsHtml(editRec?editRec.brandId:null)+'</select></div>'+
+        '<div class="field"><label>Store</label><select name="store">'+options(STORES, editRec?editRec.store:null)+'</select></div>'+
+        '<div class="field"><label>Rating</label><input name="rating" type="number" min="0" max="5" step="0.1" placeholder="4.8" value="'+(editRec&&editRec.rating!=null?esc(editRec.rating):"")+'"></div>'+
+        '<div class="field"><label>Review count</label><input name="ratingCount" type="number" min="0" placeholder="12000" value="'+(editRec?Number(editRec.ratingCount)||0:'')+'"></div>'+
+        '<div class="field"><label>Downloads (store badge, e.g. 10M+)</label><input name="downloads" type="number" min="0" placeholder="1000000" value="'+(editRec&&editRec.downloads?Number(editRec.downloads):'')+'"></div>'+
+        '<div class="field"><label>Category</label><input name="category" placeholder="Finance" value="'+(editRec?esc(editRec.category||""):"")+'"></div>'+
+        '<div class="field" style="flex:1 1 220px"><label>Title</label><input name="title" placeholder="app name as listed" value="'+(editRec?esc(editRec.title||""):"")+'"></div>'+
+        '<div class="field" style="flex:1 1 220px"><label>Subtitle</label><input name="subtitle" placeholder="App Store subtitle / Play short description" value="'+(editRec?esc(editRec.subtitle||""):"")+'"></div>'+
+        '<div class="field" style="flex:1 1 220px"><label>Keywords (comma-separated)</label><input name="keywords" placeholder="ebt, snap, cash back" value="'+(editRec?esc((editRec.keywords||[]).join(", ")):"")+'"></div>'+
+        '<div class="field" style="flex:1 1 100%"><label>Full description</label><textarea name="description" placeholder="paste the listing description">'+(editRec?esc(editRec.description||""):"")+'</textarea></div>'+
+        '<button class="primary" type="submit">'+(editRec?'Save changes':'Save')+'</button>'+
+        (editRec?' <button type="button" class="ghost" data-act="cancel-applisting-edit">Cancel</button>':'')+
+      '</form>'+
+    '</div>'+
+    '<div class="card">'+
+      '<h2>Listing keyword ownership</h2>'+
+      '<div class="hint">Claude reads each brand\'s logged title/subtitle/keywords/description and scores how strongly each brand is associated with each recurring ASO term — same reading as the Terms tab, for app store listings.</div>'+
+      '<div class="toolbar">'+
+        '<button class="primary" id="runAppKeywords" '+(kwRunning?'disabled':'')+'>'+(kwRunning?'Thinking…':(kwAnalysis?'Re-run analysis':'Run analysis'))+'</button>'+
+        (kwAnalysis ? '<span class="muted">Last run '+fmtDate(kwAnalysis.generatedAt)+'</span>' : '')+
+      '</div>'+
+      '<div style="margin-top:12px">'+kwBody+'</div>'+
+    '</div>'+
+    '<div class="card"><h2>Listing screenshots &amp; visual style</h2><div class="hint" style="margin-bottom:0">Upload the promo screenshots from each brand\'s store listing. Claude assesses color palette, how feature-callout text is used, and visual consistency with the brand\'s social presence.</div></div>'+
+    visualSections+
+  '</div>';
+}
+function wireAppStore(){
+  var f = qs("#appListingForm");
+  if(f) f.addEventListener("submit", async function(e){
+    e.preventDefault();
+    var fd = new FormData(f);
+    var brandId = fd.get("brandId"); if(!brandId) return;
+    var store = fd.get("store");
+    var docId = appListingDocId(brandId, store);
+    var prevId = editing.appListing ? appListingDocId(
+      state.appListings.filter(function(l){return l.id===editing.appListing;})[0].brandId,
+      state.appListings.filter(function(l){return l.id===editing.appListing;})[0].store
+    ) : null;
+    await caps.db.collection("appListings").doc(docId).set({
+      brandId: brandId, store: store,
+      rating: fd.get("rating")!=="" ? Number(fd.get("rating")) : null,
+      ratingCount: Number(fd.get("ratingCount"))||0,
+      downloads: Number(fd.get("downloads"))||0,
+      category: fd.get("category")||"",
+      title: fd.get("title")||"",
+      subtitle: fd.get("subtitle")||"",
+      keywords: (fd.get("keywords")||"").split(",").map(function(s){return s.trim();}).filter(Boolean),
+      description: fd.get("description")||"",
+      updatedAt: nowIso()
+    });
+    if(prevId && prevId!==docId){ await caps.db.collection("appListings").doc(prevId).delete(); }
+    editing.appListing = null;
+    f.reset();
+  });
+  qsa(".uploadAppShot").forEach(function(btn){
+    btn.addEventListener("click", async function(){
+      var brandId = btn.getAttribute("data-brand");
+      var card = btn.closest(".card");
+      var file = card.querySelector(".appShotFile").files[0];
+      var store = card.querySelector(".appShotStore").value;
+      if(!file || !caps.assets) return;
+      btn.disabled = true;
+      try{
+        var up = await caps.assets.upload(file);
+        await caps.db.collection("appScreenshots").add({ brandId:brandId, store:store, assetId: up.id, createdAt: nowIso() });
+      }catch(e){}
+      btn.disabled = false;
+    });
+  });
+  qsa(".runAppVisual").forEach(function(btn){
+    btn.addEventListener("click", function(){ runAppVisualAnalysis(btn.getAttribute("data-brand")); });
+  });
+  var run = qs("#runAppKeywords");
+  if(run) run.addEventListener("click", runAppKeywordsAnalysis);
+}
+async function runAppKeywordsAnalysis(){
+  if(!caps.sample || runningCalls.appKeywords) return;
+  var cb = coloredBrands();
+  var lines = [];
+  cb.forEach(function(b){
+    var listings = state.appListings.filter(function(l){return l.brandId===b.id;});
+    if(!listings.length) return;
+    lines.push("## "+b.name+(b.isTarget?" (TARGET)":""));
+    listings.forEach(function(l){
+      lines.push("["+l.store+"] title=\""+(l.title||"")+"\" subtitle=\""+(l.subtitle||"")+"\" keywords="+(l.keywords||[]).join(" ")+" description=\""+(l.description||"").slice(0,400)+"\"");
+    });
+  });
+  if(!lines.length) return;
+  var brandNames = cb.map(function(b){return b.name;});
+  var prompt = 'Below are App Store/Google Play listing text (title, subtitle, keywords field, description) per brand: '+brandNames.join(", ")+'. Identify 8-16 recurring ASO terms/phrases (not generic words — specific features, benefits or value props a buyer would search for) that distinguish these listings. '+
+    'For each term, score 0-100 how strongly EACH brand\'s listing is optimized around it (0 = never appears for that brand, 100 = that brand\'s listing is built around it). '+
+    'Reply with ONLY a JSON object: {"terms":[{"term":string,"scores":{'+brandNames.map(function(n){return JSON.stringify(n)+':number';}).join(",")+'}}],"summary":string}. '+
+    'Use exactly these brand names as the keys of "scores" for every term, in every term object. summary is 2-3 sentences on the overall pattern (who owns what ASO term, and the clearest keyword gap).\n\n'+lines.join("\n");
+  runningCalls.appKeywords = true; renderRoute();
+  try{
+    var data = await caps.sample.json(prompt, { modelTier:"default" });
+    await caps.db.collection("analysis").doc("appKeywords").set({ module:"appKeywords", resultJson: data, generatedAt: nowIso() });
+  }catch(e){}
+  finally{ delete runningCalls.appKeywords; renderRoute(); }
+}
+async function runAppVisualAnalysis(brandId){
+  if(!caps.sample) return;
+  var key = "appVisual_"+brandId;
+  if(runningCalls[key]) return;
+  var imgs = brandAppScreenshots(brandId).slice(0,6);
+  if(!imgs.length) return;
+  delete imageAnalysisErrors[key];
+  runningCalls[key] = true; renderRoute();
+  try{
+    var r = await collectValidImageBlobs(imgs, function(img, n){ return "Image "+n+": "+img.store+" listing screenshot"; });
+    if(!r.blobs.length) throw {code: r.skipped ? "image_rejected" : "no_images"};
+    var prompt = "These are real promo screenshots from one brand's App Store / Google Play listing, in this order:\n"+r.labels.join("\n")+
+      "\n\nAssess visual/creative style in plain text (short paragraphs, no markdown headers): "+
+      "dominant color palette, how feature-callout text/captions are used on the screenshots, subject focus (product UI vs. lifestyle imagery), and how visually consistent the listing is. End with one suggestion aimed at the B2B/business-buyer audience, not individual consumers.";
+    var res = await caps.sample(prompt, { modelTier:"default", images: r.blobs });
+    await caps.db.collection("analysis").doc(key).set({ module:key, resultText: res.text, generatedAt: nowIso(), skippedCount: r.skipped });
+  }catch(e){ imageAnalysisErrors[key] = (e && e.code) || "unknown_error"; }
+  finally{ delete runningCalls[key]; renderRoute(); }
+}
+
+/* =========================================================
+   SYNTHESIS
+   ========================================================= */
+function renderSynthesis(){
+  var cb = coloredBrands();
+  if(cb.length===0) return '<div class="empty">Add brands in Setup first.</div>';
+  var analysis = state.analysis.synthesis;
+  var running = !!runningCalls.synthesis;
+  var haveAny = state.analysis.engagement || state.analysis.terms || state.analysis.sentiment || state.analysis.ads || state.analysis.appKeywords || state.analysis.reviewThemes;
+  return '<div class="panel">'+
+    '<div class="card">'+
+      '<h2>Executive synthesis</h2>'+
+      '<div class="hint">Rolls up every module that has been run into one "who is winning where, and what to do about it" brief for the target brand.</div>'+
+      '<div class="toolbar">'+
+        '<button class="primary" id="runSynthesis" '+((running||!haveAny)?'disabled':'')+'>'+(running?'Thinking…':(analysis?'Re-run synthesis':'Generate synthesis'))+'</button>'+
+        (analysis ? '<span class="muted">Last run '+fmtDate(analysis.generatedAt)+'</span>' : '')+
+      '</div>'+
+      (haveAny ? '' : '<div class="muted" style="margin-top:10px;font-size:12.5px">Run at least one of Engagement, Terms, Sentiment, Ads, Review Themes or App Store Keywords first.</div>')+
+      '<div class="analysis-out" id="synthesisOut" style="margin-top:14px">'+(analysis ? esc(analysis.resultText) : '')+'</div>'+
+    '</div>'+
+  '</div>';
+}
+function wireSynthesis(){
+  var run = qs("#runSynthesis");
+  if(run) run.addEventListener("click", runSynthesis);
+}
+async function runSynthesis(){
+  if(!caps.sample || runningCalls.synthesis) return;
+  var cb = coloredBrands();
+  var parts = [];
+  parts.push("Brands in this audit: "+cb.map(function(b){return b.name+(b.isTarget?" (TARGET)":" (competitor)");}).join(", ")+".");
+  if(state.presence.length){
+    parts.push("\nPresence: "+state.presence.map(function(p){return brandName(p.brandId)+" on "+p.platform+": "+fmtNum(p.followers)+" followers, cadence "+p.cadence;}).join("; "));
+  }
+  if(state.analysis.engagement) parts.push("\nENGAGEMENT ANALYSIS:\n"+state.analysis.engagement.resultText);
+  if(state.analysis.terms && state.analysis.terms.resultJson) parts.push("\nTERMS OWNERSHIP:\n"+JSON.stringify(state.analysis.terms.resultJson));
+  if(state.analysis.sentiment && state.analysis.sentiment.resultJson) parts.push("\nSENTIMENT:\n"+JSON.stringify(state.analysis.sentiment.resultJson));
+  if(state.analysis.ads) parts.push("\nPAID ADS ANALYSIS:\n"+state.analysis.ads.resultText);
+  cb.forEach(function(b){ var v = state.analysis["visual_"+b.id]; if(v) parts.push("\nVISUAL STYLE ("+b.name+"):\n"+v.resultText); });
+  if(state.reviewListings.length){
+    parts.push("\nReview site ratings: "+state.reviewListings.map(function(l){return brandName(l.brandId)+" on "+l.site+": "+(l.rating!=null?l.rating:"?")+"\u2605 ("+fmtNum(l.reviewCount)+" reviews)";}).join("; "));
+  }
+  if(state.analysis.reviewThemes && state.analysis.reviewThemes.resultJson) parts.push("\nREVIEW SITE THEME OWNERSHIP:\n"+JSON.stringify(state.analysis.reviewThemes.resultJson));
+  cb.forEach(function(b){ var v = state.analysis["reviewVisual_"+b.id]; if(v) parts.push("\nREVIEW SITE VISUAL STYLE ("+b.name+"):\n"+v.resultText); });
+  if(state.appListings.length){
+    parts.push("\nApp store ratings: "+state.appListings.map(function(l){return brandName(l.brandId)+" on "+l.store+": "+(l.rating!=null?l.rating:"?")+"★ ("+fmtNum(l.ratingCount)+" reviews"+(l.downloads?", "+fmtNum(l.downloads)+"+ downloads":"")+")";}).join("; "));
+  }
+  if(state.analysis.appKeywords && state.analysis.appKeywords.resultJson) parts.push("\nAPP STORE KEYWORD OWNERSHIP:\n"+JSON.stringify(state.analysis.appKeywords.resultJson));
+  cb.forEach(function(b){ var v = state.analysis["appVisual_"+b.id]; if(v) parts.push("\nAPP STORE LISTING VISUAL STYLE ("+b.name+"):\n"+v.resultText); });
+  var prompt = "You are writing an executive brief for the TARGET brand's marketing team from a competitive social media audit. "+
+    "Using the module analyses below, write a plain-text brief (short paragraphs, dashes for lists, no markdown headers) with three sections: "+
+    "WHERE WE'RE WINNING, WHERE WE'RE LOSING, and WHAT TO DO NEXT (3-5 concrete, prioritized actions). Be specific and reference the actual brands by name. "+
+    "The target brand serves business buyers (B2B) — keep every section and every action item focused on the B2B/business side (pipeline, demos, decision-makers, procurement); only mention a B2C angle if it directly helps B2B growth, engagement or perception, and say explicitly how.\n"+parts.join("\n");
+  runningCalls.synthesis = true; renderRoute();
+  try{
+    var out = qs("#synthesisOut");
+    var res = await caps.sample(prompt, { modelTier:"default", effort:"high", onText:function(u){ if(out) out.textContent=u.text; } });
+    await caps.db.collection("analysis").doc("synthesis").set({ module:"synthesis", resultText: res.text, generatedAt: nowIso() });
+  }catch(e){}
+  finally{ delete runningCalls.synthesis; renderRoute(); }
+}
+
+/* =========================================================
+   TRENDS
+   ========================================================= */
+async function pushSnapshot(module, perBrandScores){
+  if(!caps.db) return;
+  await caps.db.collection("snapshots").add({ module: module, perBrand: perBrandScores, createdAt: nowIso() });
+}
+function renderTrends(){
+  var cb = coloredBrands();
+  if(cb.length===0) return '<div class="empty">Add brands in Setup first.</div>';
+  var modules = ["sentiment","engagement"];
+  var sections = modules.map(function(m){
+    var snaps = state.snapshots.filter(function(s){return s.module===m;}).sort(function(a,b){return (a.createdAt||"").localeCompare(b.createdAt||"");});
+    if(snaps.length<1) return '<div class="card"><h2>'+(m==="sentiment"?"Sentiment":"Engagement")+' over time</h2><div class="empty">Run the '+m+' analysis at least once (twice to see a trend) to populate this.</div></div>';
+    var chart = buildLineChart(snaps, cb, m==="sentiment" ? "net sentiment score" : "avg engagement rate", m==="engagement");
+    return '<div class="card"><h2>'+(m==="sentiment"?"Sentiment":"Engagement rate")+' over time</h2><div class="hint">Each point is captured automatically whenever you re-run that module\'s analysis.</div>'+chart+'</div>';
+  }).join("");
+  return '<div class="panel">'+sections+'</div>';
+}
+function buildLineChart(snaps, cb, yLabel, isPct){
+  var W=680,H=280,padL=48,padR=16,padT=16,padB=30;
+  var plotW=W-padL-padR, plotH=H-padT-padB;
+  var allVals = [];
+  snaps.forEach(function(s){ cb.forEach(function(b){ if(s.perBrand && s.perBrand[b.id]!=null) allVals.push(s.perBrand[b.id]); }); });
+  var floor = isPct ? 0.01 : 1;
+  var minV = Math.min(0, allVals.length?Math.min.apply(null,allVals):0);
+  var maxV = Math.max(floor, allVals.length?Math.max.apply(null,allVals):floor);
+  if(maxV===minV) maxV=minV+floor;
+  function xAt(i){ return padL + (snaps.length<=1?0:(plotW*i/(snaps.length-1))); }
+  function yAt(v){ return padT + plotH - ((v-minV)/(maxV-minV))*plotH; }
+  var svg = "";
+  var ticks=4;
+  for(var t=0;t<=ticks;t++){
+    var val = minV + (maxV-minV)*t/ticks;
+    var yy = yAt(val);
+    svg += '<line x1="'+padL+'" y1="'+yy+'" x2="'+(W-padR)+'" y2="'+yy+'" stroke="var(--grid)" stroke-width="1"/>';
+    svg += '<text x="'+(padL-8)+'" y="'+(yy+4)+'" text-anchor="end" font-size="10" fill="var(--muted)">'+(isPct?fmtPct(val):val.toFixed(0))+'</text>';
+  }
+  cb.forEach(function(b){
+    var pts = snaps.map(function(s,i){ var v = s.perBrand ? s.perBrand[b.id] : null; return v==null ? null : [xAt(i), yAt(v)]; }).filter(Boolean);
+    if(pts.length<1) return;
+    var d = pts.map(function(p,i){return (i===0?"M":"L")+p[0]+","+p[1];}).join(" ");
+    svg += '<path d="'+d+'" fill="none" stroke="var('+b.colorVar+')" stroke-width="2"></path>';
+    var vals = snaps.map(function(s){ return s.perBrand ? s.perBrand[b.id] : null; }).filter(function(v){return v!=null;});
+    pts.forEach(function(p,pi){ var v=vals[pi]; svg += '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="4" fill="var('+b.colorVar+')" data-tip="'+esc(b.name)+' · '+yLabel+': '+(isPct?fmtPct(v):v.toFixed(1))+'"></circle>'; });
+  });
+  svg += '<line x1="'+padL+'" y1="'+(padT+plotH)+'" x2="'+(W-padR)+'" y2="'+(padT+plotH)+'" stroke="var(--axis)" stroke-width="1"/>';
+  var legend = cb.map(function(b){return '<span><span class="dot" style="background:var('+b.colorVar+')"></span>'+esc(b.name)+'</span>';}).join("");
+  return '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block" role="img">'+svg+'</svg><div class="legend">'+legend+'</div>';
+}
+
+/* ---------- generic row deletes (delegated) ---------- */
+document.addEventListener("click", async function(e){
+  var el = e.target.closest("[data-act]");
+  if(!el) return;
+  var act = el.getAttribute("data-act"), id = el.getAttribute("data-id");
+  // UI-only state toggles (no db call needed)
+  if(act==="edit-presence"){ editing.presence = id; renderRoute(); return; }
+  if(act==="cancel-presence-edit"){ editing.presence = null; renderRoute(); return; }
+  if(act==="edit-post"){ editing.post = id; pendingPostScreenshots = null; renderRoute(); return; }
+  if(act==="cancel-post-edit"){ editing.post = null; pendingPostScreenshots = null; renderRoute(); return; }
+  if(act==="edit-ad"){ editing.ad = id; renderRoute(); return; }
+  if(act==="cancel-ad-edit"){ editing.ad = null; renderRoute(); return; }
+  if(act==="edit-comment"){ editing.comment = id; renderRoute(); return; }
+  if(act==="cancel-comment-edit"){ editing.comment = null; renderRoute(); return; }
+  if(act==="edit-reviewlisting"){ editing.reviewListing = id; renderRoute(); return; }
+  if(act==="cancel-reviewlisting-edit"){ editing.reviewListing = null; renderRoute(); return; }
+  if(act==="edit-applisting"){ editing.appListing = id; renderRoute(); return; }
+  if(act==="cancel-applisting-edit"){ editing.appListing = null; renderRoute(); return; }
+
+  if(!caps.db) return;
+  if(act==="del-brand"){ await caps.db.collection("brands").doc(id).delete(); }
+  else if(act==="set-target"){
+    await Promise.all(state.brands.filter(function(b){return b.isTarget;}).map(function(b){return caps.db.collection("brands").doc(b.id).update({isTarget:false});}));
+    await caps.db.collection("brands").doc(id).update({isTarget:true});
+  }
+  else if(act==="del-presence"){ await caps.db.collection("presence").doc(id).delete(); }
+  else if(act==="del-post"){ await caps.db.collection("posts").doc(id).delete(); }
+  else if(act==="del-comment"){ await caps.db.collection("postComments").doc(id).delete(); }
+  else if(act==="del-ad"){ await caps.db.collection("ads").doc(id).delete(); }
+  else if(act==="del-reviewlisting"){ await caps.db.collection("reviewListings").doc(id).delete(); }
+  else if(act==="del-reviewshot"){ await caps.db.collection("reviewScreenshots").doc(id).delete(); }
+  else if(act==="del-applisting"){ await caps.db.collection("appListings").doc(id).delete(); }
+  else if(act==="del-appshot"){ await caps.db.collection("appScreenshots").doc(id).delete(); }
+  else if(act==="save-comment"){
+    var input = qs("#editCommentInput");
+    var newText = input ? input.value.trim() : "";
+    if(newText){ await caps.db.collection("postComments").doc(id).update({text:newText}); }
+    editing.comment = null;
+    renderRoute();
+  }
+});
+
+/* ---------- chart tooltip delegation ---------- */
+document.addEventListener("mousemove", function(e){
+  var el = e.target.closest ? e.target.closest("[data-tip]") : null;
+  if(el){ showTip(e.clientX, e.clientY, el.getAttribute("data-tip")); }
+  else { hideTip(); }
+});
+
+function wireRoute(route){
+  ({setup:wireSetup, presence:wirePresence, engagement:wireEngagement, terms:wireTerms,
+    sentiment:wireSentiment, ads:wireAds, visual:wireVisual, reviews:wireReviews, appstore:wireAppStore, synthesis:wireSynthesis, trends:function(){}}[route]||function(){})();
+}
+
+boot();
+})();
+</script>
+
+</body></html>
